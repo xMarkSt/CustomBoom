@@ -1,3 +1,4 @@
+using Boom.Business.Services;
 using Boom.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,6 +15,8 @@ string? connectionString = builder.Configuration.GetConnectionString("BoomConnec
 builder.Services.AddDbContext<BoomDbContext>(options =>
     options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString))
 );
+
+builder.Services.AddScoped<ITournamentService, TournamentService>();
 
 var app = builder.Build();
 

@@ -18,6 +18,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\Boom.Business\Boom.Business.csproj" />
       <ProjectReference Include="..\Boom.Infrastructure\Boom.Infrastructure.csproj" />
     </ItemGroup>
 

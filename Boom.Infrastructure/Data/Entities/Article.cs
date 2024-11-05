@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Boom.Infrastructure.Data.Entities;
@@ -7,23 +8,32 @@ namespace Boom.Infrastructure.Data.Entities;
 public class Article
 {
     [Key]
+    [Column("id")]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public long Id { get; set; }
 
+    [Column("title")]
     [StringLength(100)]
     public string? Title { get; set; }
 
-    [StringLength(1000)] public string? Message { get; set; }
+    [Column("message")]
+    [StringLength(1000)]
+    public string? Message { get; set; }
 
+    [Column("link")]
     [StringLength(100)]
     public string? Link { get; set; }
 
+    [Column("link_title")]
     [StringLength(100)]
     public string? LinkTitle { get; set; }
 
+    [Column("popup")]
     public bool Popup { get; set; }
 
+    [Column("created_at")]
     public DateTime? CreatedAt { get; set; }
 
+    [Column("updated_at")]
     public DateTime? UpdatedAt { get; set; }
 }

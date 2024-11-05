@@ -1,3 +1,4 @@
+using Boom.Business.Services;
 using Boom.Infrastructure.Data;
 using Boom.Infrastructure.Data.Entities;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -10,20 +11,21 @@ namespace Boom.Api.Controllers;
 [Route("[controller]")]
 public class TournamentsController : ControllerBase
 {
-    // todo move to service
-    private readonly BoomDbContext _context;
+    private readonly ITournamentService _tournamentService;
 
-    public TournamentsController(BoomDbContext context)
+    public TournamentsController(ITournamentService tournamentService)
     {
-        _context = context;
+        _tournamentService = tournamentService;
     }
 
     // TODO test endpoint remove later
-    [HttpGet("get")]
-    public async Task<ActionResult<List<TournamentGroup>>> Get()
+    [HttpPost]
+    public async Task<ActionResult<List<TournamentGroup>>> Schedule()
     {
-        var todoItem = await _context.TournamentGroups.ToListAsync();
+        var currentTournament = await _tournamentService.GetScheduled();
 
-        return todoItem;
+        if (currentTournament == null) return NotFound();
+        
+        return Ok(currentTournament);
     }
 }

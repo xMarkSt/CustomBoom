@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Boom.Infrastructure.Data.Entities;
@@ -8,29 +9,40 @@ public class Level
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    [Column("id")]
     public long Id { get; set; }
 
+    [Column("display_name")]
     [MaxLength(60)]
     public string DisplayName { get; set; } = null!;
 
+    [Column("level_id")]
     [MaxLength(100)]
     public string LevelId { get; set; } = null!;
 
+    [Column("theme_id")]
     public long ThemeId { get; set; }
 
-    public bool Online { get; set; } 
+    [Column("online")]
+    public bool Online { get; set; }
 
+    [Column("custom")]
     public bool Custom { get; set; }
 
+    [Column("file_path")]
     [MaxLength(255)]
-    public string? FilePath { get; set; }
+    public string FilePath { get; set; }
 
+    [Column("version")]
     public short Version { get; set; } = 0;
 
+    [Column("created_at")]
     public DateTime? CreatedAt { get; set; }
 
+    [Column("updated_at")]
     public DateTime? UpdatedAt { get; set; }
 
+    [Column("bg_id")]
     [ForeignKey("Background")]
     public long BgId { get; set; }
 
