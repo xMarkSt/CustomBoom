@@ -6,6 +6,7 @@ namespace Boom.Infrastructure.Data;
 public class BoomDbContext(DbContextOptions<BoomDbContext> options) : DbContext(options)
 {
     // Entities        
+    public DbSet<TournamentGroup> TournamentGroups { get; set; } = null!;
     public DbSet<Tournament> Tournaments { get; set; } = null!;
     public DbSet<Article> Articles { get; set; } = null!;
     public DbSet<Ghost> Ghosts { get; set; } = null!;
