@@ -7,7 +7,12 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\Boom.Common\Boom.Common.csproj" />
       <ProjectReference Include="..\Boom.Infrastructure\Boom.Infrastructure.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="plist-cil" Version="2.2.0" />
     </ItemGroup>
 
 </Project>

@@ -1,5 +1,7 @@
+using Boom.Common.DTOs;
 using Boom.Infrastructure.Data;
 using Boom.Infrastructure.Data.Entities;
+using Claunia.PropertyList;
 using Microsoft.EntityFrameworkCore;
 
 namespace Boom.Business.Services;
@@ -24,5 +26,11 @@ public class TournamentService : ITournamentService
             .Where(x => x.EndsAt > DateTime.Now)
             .OrderBy(x => x.EndsAt)
             .FirstOrDefaultAsync();
+    }
+    
+    public NSObject SerializeTest(ScheduleDto dto)
+    {
+        var a = NSObject.Wrap(dto.Schedule.First().Level);
+        return a;
     }
 }
