@@ -42,7 +42,7 @@ public class Tests
                 LevelId = 1,
                 Level = new LevelDto
                 {
-                    ThemeName = null,
+                    ThemeName = "MyTheme",
                     LevelName = "Dummy Level",
                     LevelId = "D1",
                     Version = 1,
@@ -66,9 +66,9 @@ public class Tests
                     LevelName = "Another Level",
                     LevelId = "A2",
                     Version = 2,
-                    Target = "Another Target",
+                    Target = "",
                     Online = false,
-                    Url = "https://another.url",
+                    Url = "",
                     BgName = "AnotherBg"
                 },
                 NoSuper = true,
@@ -90,7 +90,7 @@ public class Tests
             using (var context = new BoomDbContext(options))
             {
                 var service = new TournamentService(context);
-                var res = service.SerializeTest(scheduleDto);
+                var res = service.SerializeToNSDictionary(scheduleDto);
                 Console.WriteLine(res.ToXmlPropertyList());
             }
         }
