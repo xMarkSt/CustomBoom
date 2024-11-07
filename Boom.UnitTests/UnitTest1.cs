@@ -42,7 +42,7 @@ public class Tests
                 LevelId = 1,
                 Level = new LevelDto
                 {
-                    ThemeName = "Dummy Theme",
+                    ThemeName = null,
                     LevelName = "Dummy Level",
                     LevelId = "D1",
                     Version = 1,
@@ -90,8 +90,8 @@ public class Tests
             using (var context = new BoomDbContext(options))
             {
                 var service = new TournamentService(context);
-                service.SerializeTest(scheduleDto);
-                Assert.Pass();
+                var res = service.SerializeTest(scheduleDto);
+                Console.WriteLine(res.ToXmlPropertyList());
             }
         }
     }

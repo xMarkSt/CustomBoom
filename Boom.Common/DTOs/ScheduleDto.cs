@@ -1,11 +1,13 @@
+using Boom.Business.Services;
+
 namespace Boom.Common.DTOs;
 
-public class ScheduleDto
+public class ScheduleDto: IPlistSerializable
 {
     public List<TournamentGroupDto> Schedule { get; set; }
 }
-
-public class TournamentGroupDto
+// TODO: Check entities to know which are nullable
+public class TournamentGroupDto: IPlistSerializable
 {
     public Guid Uuid { get; set; }
     public int LevelId { get; set; }
@@ -15,7 +17,7 @@ public class TournamentGroupDto
     public int SecondsToStart { get; set; }
 }
 
-public class LevelDto
+public class LevelDto: IPlistSerializable
 {
     public string ThemeName { get; set; }
     public string LevelName { get; set; }
