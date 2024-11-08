@@ -5,13 +5,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Boom.Infrastructure.Data.Entities;
 
 [Table("level")]
-public class Level
+public class Level : EntityBase
 {
-    [Key]
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    [Column("id")]
-    public long Id { get; set; }
-
     [Column("display_name")]
     [MaxLength(60)]
     public string DisplayName { get; set; } = null!;
@@ -35,12 +30,6 @@ public class Level
 
     [Column("version")]
     public short Version { get; set; } = 0;
-
-    [Column("created_at")]
-    public DateTime? CreatedAt { get; set; }
-
-    [Column("updated_at")]
-    public DateTime? UpdatedAt { get; set; }
 
     [Column("bg_id")]
     [ForeignKey("Background")]

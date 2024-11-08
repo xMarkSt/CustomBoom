@@ -5,13 +5,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Boom.Infrastructure.Data.Entities;
 
 [Table("users")]
-public class User
+public class User : EntityBase
 {
-    [Key]
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    [Column("id")]
-    public long Id { get; set; }
-
     [Column("name")]
     [StringLength(191)]
     public string Name { get; set; } = null!;
@@ -31,10 +26,4 @@ public class User
     [Column("remember_token")]
     [StringLength(100)]
     public string? RememberToken { get; set; }
-
-    [Column("created_at")]
-    public DateTime? CreatedAt { get; set; }
-
-    [Column("updated_at")]
-    public DateTime? UpdatedAt { get; set; }
 }

@@ -5,13 +5,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Boom.Infrastructure.Data.Entities;
 
 [Table("players")]
-public class Player
+public class Player : EntityBase
 {
-    [Key]
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    [Column("id")]
-    public long Id { get; set; }
-
     [Column("uuid")]
     [StringLength(36)]
     public Guid Uuid { get; set; }
@@ -115,12 +110,6 @@ public class Player
     [Column("max_group_id_unlocked")]
     [StringLength(50)]
     public string MaxGroupIdUnlocked { get; set; } = null!;
-
-    [Column("created_at")]
-    public DateTime? CreatedAt { get; set; }
-
-    [Column("updated_at")]
-    public DateTime? UpdatedAt { get; set; }
 
     [Column("secret_key")]
     [StringLength(25)]

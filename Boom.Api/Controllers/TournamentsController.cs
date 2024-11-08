@@ -24,7 +24,7 @@ public class TournamentsController : ControllerBase
     {
         var currentTournament = await _tournamentService.GetScheduled();
 
-        if (currentTournament == null) return NotFound();
+        if (currentTournament.Schedule.Count == 0) return NotFound();
         
         return Ok(currentTournament);
     }

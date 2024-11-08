@@ -5,13 +5,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Boom.Infrastructure.Data.Entities;
 
 [Table("tournaments")]
-public class Tournament
+public class Tournament : EntityBase
 {
-    [Key]
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    [Column("id")]
-    public long Id { get; set; }
-
     [Column("tournament_group_id")]
     public long TournamentGroupId { get; set; }
 
@@ -24,12 +19,6 @@ public class Tournament
 
     [Column("cheaters")]
     public int Cheaters { get; set; } = 0;
-
-    [Column("created_at")]
-    public DateTime? CreatedAt { get; set; }
-
-    [Column("updated_at")]
-    public DateTime? UpdatedAt { get; set; }
 
     // Navigation property for the relationship
     public virtual TournamentGroup TournamentGroup { get; set; } = null!;

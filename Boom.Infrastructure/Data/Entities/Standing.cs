@@ -4,13 +4,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Boom.Infrastructure.Data.Entities;
 
 [Table("standings")]
-public class Standing
+public class Standing : EntityBase
 {
-    [Key]
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    [Column("id")]
-    public long Id { get; set; }
-
     [Column("tournament_id")]
     public long TournamentId { get; set; }
     
@@ -35,12 +30,6 @@ public class Standing
     [Column("engine_style")]
     [MaxLength(20)]
     public string EngineStyle { get; set; } = null!;
-
-    [Column("created_at")]
-    public DateTime? CreatedAt { get; set; }
-
-    [Column("updated_at")]
-    public DateTime? UpdatedAt { get; set; }
 
     // Navigation properties
     public virtual Tournament Tournament { get; set; } = null!;

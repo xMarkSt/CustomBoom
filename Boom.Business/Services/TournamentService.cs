@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Reflection;
+using AutoMapper;
 using Boom.Common;
 using Boom.Common.DTOs;
 using Boom.Common.Extensions;
@@ -12,24 +13,32 @@ namespace Boom.Business.Services;
 
 public class TournamentService : ITournamentService
 {
-    // todo move to service
-    private readonly BoomDbContext _context;
+    private readonly IRepository _repository;
+    private readonly IMapper _mapper;
 
-    public TournamentService(BoomDbContext context)
+    public TournamentService(IRepository repository, IMapper mapper)
     {
-        _context = context;
+        _repository = repository;
+        _mapper = mapper;
     }
     
     /// <summary>
     /// Get the currently scheduled tournament group
     /// </summary>
     /// <returns></returns>
-    public async Task<TournamentGroup?> GetScheduled()
+    public async Task<ScheduleDto> GetScheduled()
     {
-        return await _context.TournamentGroups
-            .Where(x => x.EndsAt > DateTime.Now)
+        var current = await _repository.GetAll<TournamentGroup>()
+            // .Where(x => x.EndsAt > DateTime.Now) // For testing
             .OrderBy(x => x.EndsAt)
             .FirstOrDefaultAsync();
+        return new ScheduleDto()
+        {
+            Schedule = new List<TournamentGroupDto>()
+            {
+                _mapper.Map<TournamentGroupDto>(current)
+            }
+        };
     }
     
     /// <summary>

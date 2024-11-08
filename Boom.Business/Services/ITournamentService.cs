@@ -1,4 +1,5 @@
 using Boom.Common;
+using Boom.Common.DTOs;
 using Boom.Infrastructure.Data.Entities;
 using Claunia.PropertyList;
 
@@ -6,7 +7,7 @@ namespace Boom.Business.Services;
 
 public interface ITournamentService
 {
-    Task<TournamentGroup?> GetScheduled();
+    Task<ScheduleDto> GetScheduled();
 
     /// <summary>
     /// Serialize a dto type class to a NSDictionary

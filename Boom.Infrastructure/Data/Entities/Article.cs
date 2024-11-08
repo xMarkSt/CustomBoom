@@ -5,13 +5,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Boom.Infrastructure.Data.Entities;
 
 [Table("articles")]
-public class Article
+public class Article : EntityBase
 {
-    [Key]
-    [Column("id")]
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public long Id { get; set; }
-
     [Column("title")]
     [StringLength(100)]
     public string? Title { get; set; }
@@ -30,10 +25,4 @@ public class Article
 
     [Column("popup")]
     public bool Popup { get; set; }
-
-    [Column("created_at")]
-    public DateTime? CreatedAt { get; set; }
-
-    [Column("updated_at")]
-    public DateTime? UpdatedAt { get; set; }
 }

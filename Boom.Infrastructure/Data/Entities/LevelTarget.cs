@@ -4,13 +4,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Boom.Infrastructure.Data.Entities;
 
 [Table("level_target")]
-public class LevelTarget
+public class LevelTarget : EntityBase
 {
-    [Key]
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    [Column("id")]
-    public long Id { get; set; }
-
     [Column("level_id")]
     public long LevelId { get; set; }
 
@@ -22,12 +17,6 @@ public class LevelTarget
 
     [Column("order")]
     public int Order { get; set; }
-
-    [Column("created_at")]
-    public DateTime? CreatedAt { get; set; }
-
-    [Column("updated_at")]
-    public DateTime? UpdatedAt { get; set; }
 
     // Navigation properties
     public virtual Level Level { get; set; } = null!;

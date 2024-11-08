@@ -1,3 +1,4 @@
+using Boom.Business.MappingProfiles;
 using Boom.Business.Services;
 using Boom.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
@@ -17,6 +18,7 @@ builder.Services.AddDbContext<BoomDbContext>(options =>
 );
 
 builder.Services.AddScoped<ITournamentService, TournamentService>();
+builder.Services.AddAutoMapper(typeof(TournamentGroupProfile));
 
 var app = builder.Build();
 
