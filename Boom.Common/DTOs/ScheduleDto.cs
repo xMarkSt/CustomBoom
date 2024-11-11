@@ -10,12 +10,12 @@ public class TournamentGroupDto : IPlistSerializable
     public Guid Uuid { get; set; }
     public int LevelId { get; set; }
     public LevelDto Level { get; set; }
-    public bool NoSuper { get; set; }
+    public int NoSuper { get; set; }
     public int SecondsToEnd { get; set; }
     public int SecondsToStart { get; set; }
 }
 
-public class LevelDto : IPlistSerializable
+public class LevelDto : IPlistSerializable // todo rename leveltargetdto?
 {
     public string ThemeName { get; set; }
     public string LevelName { get; set; }

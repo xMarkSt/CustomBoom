@@ -24,7 +24,7 @@ public class UnitTest1
     {
         Id = 1,
         DisplayName = "Test Level 1",
-        LevelId = "L001",
+        LevelId = "FirstLeap",
         ThemeId = 1, // Mock theme ID
         Online = true,
         Custom = false,
@@ -54,7 +54,7 @@ public class UnitTest1
                 Id = 1,
                 Uuid = Guid.NewGuid(),
                 LevelTargetId = 1,
-                NoSuper = false,
+                NoSuper = true,
                 StartsAt = DateTime.Now.AddDays(-1),
                 EndsAt = DateTime.Now.AddDays(1),
                 LevelTarget = new LevelTarget
@@ -80,7 +80,6 @@ public class UnitTest1
     {
         // Arrange
         var mockRepo = new Mock<IRepository>();
-        var mockdata = GetTestData().BuildMock();
         mockRepo
             .Setup(r => r.GetAll<TournamentGroup>())
             .Returns(GetTestData().BuildMock);
@@ -114,7 +113,7 @@ public class UnitTest1
                 Url = "https://dummy.url",
                 BgName = "DummyBg"
             },
-            NoSuper = false,
+            NoSuper = 0,
             SecondsToEnd = 60,
             SecondsToStart = 30
         };
@@ -134,7 +133,7 @@ public class UnitTest1
                 Url = "",
                 BgName = "AnotherBg"
             },
-            NoSuper = true,
+            NoSuper = 1,
             SecondsToEnd = 120,
             SecondsToStart = 60
         };
