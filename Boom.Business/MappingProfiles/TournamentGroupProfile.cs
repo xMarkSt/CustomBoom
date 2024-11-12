@@ -10,14 +10,14 @@ public class TournamentGroupProfile : Profile
     {
         CreateMap<TournamentGroup, TournamentGroupDto>()
             .ForMember(dest => dest.LevelId, opt => opt.MapFrom(src => src.LevelTarget.LevelId))
-            .ForMember(dest => dest.Level,
+            .ForMember(dest => dest.LevelTarget,
                 opt => opt.MapFrom((src, _, _, context) =>
-                    context.Mapper.Map<LevelTarget, LevelDto>(src.LevelTarget)))
+                    context.Mapper.Map<LevelTarget, LevelTargetDto>(src.LevelTarget)))
             .ForMember(dest => dest.SecondsToEnd, opt => opt.MapFrom(src => (src.EndsAt - DateTime.Now).TotalSeconds))
             .ForMember(dest => dest.SecondsToStart, opt => opt.MapFrom(src => (src.StartsAt - DateTime.Now).TotalSeconds));
 
         
-        CreateMap<LevelTarget, LevelDto>() // todo: see php version
+        CreateMap<LevelTarget, LevelTargetDto>() // todo: see php version
             .ForMember(dest => dest.ThemeName, opt => opt.MapFrom(src => src.Level.Theme.Name))
             .ForMember(dest => dest.LevelName, opt => opt.MapFrom(src => src.Level.DisplayName))
             .ForMember(dest => dest.LevelId, opt => opt.MapFrom(src => $"{src.Level.LevelId}:{src.Order}")) // Todo: When online, don't do this?

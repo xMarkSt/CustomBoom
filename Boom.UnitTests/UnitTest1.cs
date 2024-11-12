@@ -14,12 +14,6 @@ namespace Boom.UnitTests;
 
 public class UnitTest1
 {
-    [SetUp]
-    public void Setup()
-    {
-        
-    }
-
     private static Level TestLevel => new()
     {
         Id = 1,
@@ -92,7 +86,6 @@ public class UnitTest1
         // Act
         var service = new TournamentService(mockRepo.Object, mapper);
         var res = await service.GetScheduled();
-        Console.WriteLine(service.SerializeToNSDictionary(res).ToXmlPropertyList());
     }
 
     [Test]
@@ -103,7 +96,7 @@ public class UnitTest1
         {
             Uuid = Guid.NewGuid(),
             LevelId = 1,
-            Level = new LevelDto
+            LevelTarget = new LevelTargetDto
             {
                 ThemeName = "MyTheme",
                 LevelName = "Dummy Level",
@@ -123,7 +116,7 @@ public class UnitTest1
         {
             Uuid = Guid.NewGuid(),
             LevelId = 2,
-            Level = new LevelDto
+            LevelTarget = new LevelTargetDto
             {
                 ThemeName = "Another Theme",
                 LevelName = "Another Level",
@@ -149,7 +142,7 @@ public class UnitTest1
             }
         };
 
-        var service = new TournamentService(Mock.Of<IRepository>(), Mock.Of<IMapper>());
+        var service = new PlistSerializationService();
         var res = service.SerializeToNSDictionary(scheduleDto);
         Console.WriteLine(res.ToXmlPropertyList());
     }
