@@ -24,5 +24,5 @@ public class LevelDto : IPlistSerializable // todo rename leveltargetdto?
     public string Target { get; set; }
     public bool Online { get; set; }
     public string Url { get; set; }
-    public string BgName { get; set; }
+    public string BgName { get; set; } // todo: this should not be snake case.
 }

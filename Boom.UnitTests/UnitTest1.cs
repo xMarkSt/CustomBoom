@@ -26,7 +26,7 @@ public class UnitTest1
         DisplayName = "Test Level 1",
         LevelId = "FirstLeap",
         ThemeId = 1, // Mock theme ID
-        Online = true,
+        Online = false,
         Custom = false,
         FilePath = "/path/to/file1",
         Version = 1,
@@ -41,7 +41,8 @@ public class UnitTest1
         Background = new Theme
         {
             Id = 10,
-            Name = "Sample Background"
+            Name = "Sample Background",
+            BgName = "MyBackground.plist"
         }
     };
 
@@ -55,8 +56,8 @@ public class UnitTest1
                 Uuid = Guid.NewGuid(),
                 LevelTargetId = 1,
                 NoSuper = true,
-                StartsAt = DateTime.Now.AddDays(-1),
-                EndsAt = DateTime.Now.AddDays(1),
+                StartsAt = DateTime.Now.AddHours(-1),
+                EndsAt = DateTime.Now.AddHours(1),
                 LevelTarget = new LevelTarget
                 {
                     Id = 1,
