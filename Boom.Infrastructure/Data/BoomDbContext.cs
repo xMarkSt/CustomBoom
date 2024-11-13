@@ -1,4 +1,5 @@
 ﻿using Boom.Infrastructure.Data.Entities;
+using Boom.Infrastructure.Seeding;
 using Microsoft.EntityFrameworkCore;
 
 namespace Boom.Infrastructure.Data;
@@ -16,4 +17,11 @@ public class BoomDbContext(DbContextOptions<BoomDbContext> options) : DbContext(
     public DbSet<Standing> Standings { get; set; } = null!;
     public DbSet<Theme> Themes { get; set; } = null!;
     public DbSet<User> Users { get; set; } = null!;
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        => optionsBuilder
+            .UseAsyncSeeding(async (context, _, cancellationToken) =>
+            {
+                SeedHelper.SeedLevels(context, cancellationToken);
+            });
 }

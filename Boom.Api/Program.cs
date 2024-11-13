@@ -17,6 +17,7 @@ builder.Services.AddDbContext<BoomDbContext>(options =>
     options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString))
 );
 
+builder.Services.AddScoped(typeof(IRepository), typeof(Repository<BoomDbContext>));
 builder.Services.AddScoped<ITournamentService, TournamentService>();
 builder.Services.AddAutoMapper(typeof(TournamentGroupProfile));
 
