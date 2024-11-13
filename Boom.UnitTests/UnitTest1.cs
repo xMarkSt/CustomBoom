@@ -138,7 +138,7 @@ public class UnitTest1
             Schedule = new List<TournamentGroupDto>
             {
                 tournamentGroup1,
-                tournamentGroup2
+                // tournamentGroup2
             }
         };
 

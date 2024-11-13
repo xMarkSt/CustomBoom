@@ -22,34 +22,42 @@ public class PlistSerializationService : IPlistSerializationService
             object? val = prop.GetValue(dto, null);
             var customPropertyName = prop.GetCustomAttribute<PlistPropertyNameAttribute>();
             string name = customPropertyName == null ? prop.Name.ToSnakeCase() : customPropertyName.Name;
-            if (val == null) continue;
-            if (prop.PropertyType.IsAssignableTo(typeof(IPlistSerializable)))
+            switch (val)
             {
-                // Recursively serialize this member
-                dict.Add(name, SerializeToNSDictionary((IPlistSerializable)val));
-            }
-            else if (prop.PropertyType.IsAssignableTo(typeof(Guid)))
-            {
-                dict.Add(name, val.ToString());
-            }
-            // If list of IPlistSerializable
-            else if (prop.PropertyType.IsAssignableTo(typeof(IList)) && val.GetType().GetGenericArguments()
-                         .FirstOrDefault().IsAssignableTo(typeof(IPlistSerializable)))
-            {
-                // Serialize each list item into an NSArray and add it to the dictionary
-                var newList = new NSArray();
-                foreach (object? listItem in (IList)val)
+                case null:
+                    continue;
+                case IPlistSerializable serializable:
+                    // Recursively serialize this member
+                    dict.Add(name, SerializeToNSDictionary(serializable));
+                    break;
+                case Guid guid:
+                    dict.Add(name, guid.ToString());
+                    break;
+                case IList list:
+                    
+                    // Serialize each list item into an NSArray and add it to the dictionary
+                    var newList = new NSArray();
+                    foreach (var listItem in list)
+                    {
+                        if (listItem is IPlistSerializable item)
+                        {
+                            newList.Add(SerializeToNSDictionary(item));
+                        }
+                        else
+                        {
+                            // Use default serialization
+                            newList.Add(listItem);
+                        }
+                    }
+
+                    dict.Add(name, newList);
+                    break;
+                // Add rest of types as-is to be handled by plist-cil
+                default:
                 {
-                    newList.Add(SerializeToNSDictionary((IPlistSerializable)listItem));
+                    dict.Add(name, val);
+                    break;
                 }
-
-                dict.Add(name, newList);
-            }
-
-            // Add rest of types as-is to be handled by plist-cil
-            else
-            {
-                dict.Add(name, val);
             }
         }
 
