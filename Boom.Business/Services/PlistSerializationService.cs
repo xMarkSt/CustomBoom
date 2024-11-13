@@ -10,58 +10,58 @@ namespace Boom.Business.Services;
 public class PlistSerializationService : IPlistSerializationService
 {
     /// <summary>
-    /// Serialize a dto type class to a NSDictionary
+    /// Serialize a dto type class to a NSDictionary.
     /// </summary>
     /// <param name="dto"></param>
     /// <returns></returns>
     public NSDictionary SerializeToNSDictionary(IPlistSerializable dto)
     {
         var dict = new Dictionary<string, object>();
+        
+        // Use reflection to convert each member to a type compatible with plist-cil.
         foreach (PropertyInfo prop in dto.GetType().GetProperties())
         {
             object? val = prop.GetValue(dto, null);
+            
             var customPropertyName = prop.GetCustomAttribute<PlistPropertyNameAttribute>();
             string name = customPropertyName == null ? prop.Name.ToSnakeCase() : customPropertyName.Name;
-            switch (val)
+            
+            object? objToAdd = ConvertToPlistCompatibleType(val);
+            if (objToAdd != null)
             {
-                case null:
-                    continue;
-                case IPlistSerializable serializable:
-                    // Recursively serialize this member
-                    dict.Add(name, SerializeToNSDictionary(serializable));
-                    break;
-                case Guid guid:
-                    dict.Add(name, guid.ToString());
-                    break;
-                case IList list:
-                    
-                    // Serialize each list item into an NSArray and add it to the dictionary
-                    var newList = new NSArray();
-                    foreach (var listItem in list)
-                    {
-                        if (listItem is IPlistSerializable item)
-                        {
-                            newList.Add(SerializeToNSDictionary(item));
-                        }
-                        else
-                        {
-                            // Use default serialization
-                            newList.Add(listItem);
-                        }
-                    }
-
-                    dict.Add(name, newList);
-                    break;
-                // Add rest of types as-is to be handled by plist-cil
-                default:
-                {
-                    dict.Add(name, val);
-                    break;
-                }
+                dict.Add(name, objToAdd);
             }
         }
 
-        NSDictionary? wrap = NSObject.Wrap(dict);
-        return wrap;
+        // Use plist-cil to convert Dictionary to NSDictionary.
+        var nsDict = NSObject.Wrap(dict);
+        return nsDict;
+    }
+
+    /// <summary>
+    /// Convert the object to a type that is compatible with plist-cil.
+    /// </summary>
+    /// <param name="obj"></param>
+    /// <returns></returns>
+    private object? ConvertToPlistCompatibleType(object? obj)
+    {
+        switch (obj)
+        {
+            case IPlistSerializable serializable:
+                return SerializeToNSDictionary(serializable);
+            case Guid guid:
+                return guid.ToString();
+            case IList list:
+                // Convert list type to NSArray. 
+                var newList = new NSArray();
+                foreach (var listItem in list)
+                {
+                    newList.Add(ConvertToPlistCompatibleType(listItem));
+                }
+                return newList;
+            default:
+                // Return type as-is so it can be handled by plist-cil.
+                return obj;
+        }
     }
 }
