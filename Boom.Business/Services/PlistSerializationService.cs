@@ -23,12 +23,12 @@ public class PlistSerializationService : IPlistSerializationService
         {
             object? val = prop.GetValue(dto, null);
             
-            var customPropertyName = prop.GetCustomAttribute<PlistPropertyNameAttribute>();
-            string name = customPropertyName == null ? prop.Name.ToSnakeCase() : customPropertyName.Name;
-            
             object? objToAdd = ConvertToPlistCompatibleType(val);
             if (objToAdd != null)
             {
+                var customPropertyName = prop.GetCustomAttribute<PlistPropertyNameAttribute>();
+                string name = customPropertyName == null ? prop.Name.ToSnakeCase() : customPropertyName.Name;
+                
                 dict.Add(name, objToAdd);
             }
         }
