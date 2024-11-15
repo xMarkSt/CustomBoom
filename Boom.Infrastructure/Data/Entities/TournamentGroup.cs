@@ -13,7 +13,7 @@ public class TournamentGroup : EntityBase
     public long LevelTargetId { get; set; }
 
     [Column("no_super")]
-    public bool NoSuper { get; set; }
+    public bool NoSuper { get; set; } = false;
 
     [Column("starts_at")]
     public DateTime StartsAt { get; set; }

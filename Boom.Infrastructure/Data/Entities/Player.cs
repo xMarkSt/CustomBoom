@@ -19,11 +19,11 @@ public class Player : EntityBase
 
     [Column("nickname")]
     [StringLength(50)]
-    public string Nickname { get; set; }
+    public string? Nickname { get; set; }
 
     [Column("fullname")]
     [StringLength(50)]
-    public string Fullname { get; set; }
+    public string? Fullname { get; set; }
 
     [Column("notification")]
     [StringLength(20)]
@@ -31,7 +31,7 @@ public class Player : EntityBase
 
     [Column("email")]
     [StringLength(20)]
-    public string Email { get; set; }
+    public string? Email { get; set; }
 
     [Column("badge")]
     public int Badge { get; set; }
@@ -55,15 +55,15 @@ public class Player : EntityBase
 
     [Column("device")]
     [StringLength(30)]
-    public string Device { get; set; }
+    public string? Device { get; set; }
 
     [Column("ios")]
     [StringLength(20)]
-    public string Ios { get; set; }
+    public string? Ios { get; set; }
 
     [Column("tiny_url")]
     [StringLength(20)]
-    public string TinyUrl { get; set; }
+    public string? TinyUrl { get; set; }
 
     [Column("hero_style")]
     [StringLength(20)]
@@ -77,17 +77,17 @@ public class Player : EntityBase
     [StringLength(20)]
     public string WheelStyle { get; set; } = null!;
 
-    [Column("total_hidden_piles_found")]
-    public int? TotalHiddenPilesFound { get; set; }
+    [Column("total_hidden_piles_found")] 
+    public int? TotalHiddenPilesFound { get; set; } = 0;
 
     [Column("total_earned_medals")]
-    public int TotalEarnedMedals { get; set; }
+    public int TotalEarnedMedals { get; set; } = 0;
 
-    [Column("total_earned_superstars")]
-    public int TotalEarnedSuperstars { get; set; }
+    [Column("total_earned_superstars")] 
+    public int TotalEarnedSuperstars { get; set; } = 0;
 
-    [Column("total_distance")]
-    public double TotalDistance { get; set; }
+    [Column("total_distance")] 
+    public double TotalDistance { get; set; } = 0;
 
     [Column("vs_played")]
     public int VsPlayed { get; set; } = 0;
@@ -113,5 +113,5 @@ public class Player : EntityBase
 
     [Column("secret_key")]
     [StringLength(25)]
-    public string SecretKey { get; set; }
+    public string? SecretKey { get; set; }
 }

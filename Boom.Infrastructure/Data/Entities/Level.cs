@@ -26,7 +26,7 @@ public class Level : EntityBase
 
     [Column("file_path")]
     [MaxLength(255)]
-    public string FilePath { get; set; }
+    public string? FilePath { get; set; }
 
     [Column("version")]
     public short Version { get; set; } = 0;
