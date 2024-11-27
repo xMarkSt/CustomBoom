@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="SqlDialectMappings">
+    <file url="file://$PROJECT_DIR$/Scripts/level_target.sql" dialect="MariaDB" />
+    <file url="file://$PROJECT_DIR$/Scripts/levels.sql" dialect="MariaDB" />
+    <file url="file://$PROJECT_DIR$/Scripts/targets.sql" dialect="MariaDB" />
+    <file url="file://$PROJECT_DIR$/Scripts/themes.sql" dialect="MariaDB" />
     <file url="file://$USER_HOME$/Documents/Keys/boomclone.sql" dialect="MariaDB" />
   </component>
 </project>

@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Boom.Infrastructure.Data.Entities;
 
-[Table("level")]
+[Table("levels")]
 public class Level : EntityBase
 {
     [Column("display_name")]

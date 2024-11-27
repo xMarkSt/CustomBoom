@@ -64,13 +64,13 @@ namespace Boom.Infrastructure.Migrations
                     uuid = table.Column<Guid>(type: "char(36)", maxLength: 36, nullable: false, collation: "ascii_general_ci"),
                     facebook_id = table.Column<long>(type: "bigint", nullable: true),
                     twitter_id = table.Column<long>(type: "bigint", nullable: true),
-                    nickname = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
+                    nickname = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    fullname = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
+                    fullname = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     notification = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    email = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: false)
+                    email = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     badge = table.Column<int>(type: "int", nullable: false),
                     last_login_at = table.Column<DateTime>(type: "datetime(6)", nullable: true),
@@ -80,11 +80,11 @@ namespace Boom.Infrastructure.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     timezone_seconds_offset = table.Column<int>(type: "int", nullable: false),
                     rev = table.Column<int>(type: "int", nullable: true),
-                    device = table.Column<string>(type: "varchar(30)", maxLength: 30, nullable: false)
+                    device = table.Column<string>(type: "varchar(30)", maxLength: 30, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    ios = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: false)
+                    ios = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    tiny_url = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: false)
+                    tiny_url = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     hero_style = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
@@ -104,7 +104,7 @@ namespace Boom.Infrastructure.Migrations
                     world_rank = table.Column<int>(type: "int", nullable: true),
                     max_group_id_unlocked = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    secret_key = table.Column<string>(type: "varchar(25)", maxLength: 25, nullable: false)
+                    secret_key = table.Column<string>(type: "varchar(25)", maxLength: 25, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     created_at = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     updated_at = table.Column<DateTime>(type: "datetime(6)", nullable: true)
@@ -176,7 +176,7 @@ namespace Boom.Infrastructure.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "level",
+                name: "levels",
                 columns: table => new
                 {
                     id = table.Column<long>(type: "bigint", nullable: false)
@@ -188,7 +188,7 @@ namespace Boom.Infrastructure.Migrations
                     theme_id = table.Column<long>(type: "bigint", nullable: false),
                     online = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     custom = table.Column<bool>(type: "tinyint(1)", nullable: false),
-                    file_path = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false)
+                    file_path = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     version = table.Column<short>(type: "smallint", nullable: false),
                     bg_id = table.Column<long>(type: "bigint", nullable: false),
@@ -197,15 +197,15 @@ namespace Boom.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_level", x => x.id);
+                    table.PrimaryKey("PK_levels", x => x.id);
                     table.ForeignKey(
-                        name: "FK_level_themes_bg_id",
+                        name: "FK_levels_themes_bg_id",
                         column: x => x.bg_id,
                         principalTable: "themes",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_level_themes_theme_id",
+                        name: "FK_levels_themes_theme_id",
                         column: x => x.theme_id,
                         principalTable: "themes",
                         principalColumn: "id",
@@ -230,9 +230,9 @@ namespace Boom.Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_level_target", x => x.id);
                     table.ForeignKey(
-                        name: "FK_level_target_level_level_id",
+                        name: "FK_level_target_levels_level_id",
                         column: x => x.level_id,
-                        principalTable: "level",
+                        principalTable: "levels",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -339,16 +339,6 @@ namespace Boom.Infrastructure.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateIndex(
-                name: "IX_level_bg_id",
-                table: "level",
-                column: "bg_id");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_level_theme_id",
-                table: "level",
-                column: "theme_id");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_level_target_level_id",
                 table: "level_target",
                 column: "level_id");
@@ -357,6 +347,16 @@ namespace Boom.Infrastructure.Migrations
                 name: "IX_level_target_target_id",
                 table: "level_target",
                 column: "target_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_levels_bg_id",
+                table: "levels",
+                column: "bg_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_levels_theme_id",
+                table: "levels",
+                column: "theme_id");
 
             migrationBuilder.CreateIndex(
                 name: "IX_standings_ghost_id",
@@ -412,7 +412,7 @@ namespace Boom.Infrastructure.Migrations
                 name: "level_target");
 
             migrationBuilder.DropTable(
-                name: "level");
+                name: "levels");
 
             migrationBuilder.DropTable(
                 name: "targets");

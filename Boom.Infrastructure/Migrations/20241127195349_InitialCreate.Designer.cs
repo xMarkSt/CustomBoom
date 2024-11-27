@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Boom.Infrastructure.Migrations
 {
     [DbContext(typeof(BoomDbContext))]
-    [Migration("20241113171428_InitialCreate")]
+    [Migration("20241127195349_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -126,7 +126,6 @@ namespace Boom.Infrastructure.Migrations
                         .HasColumnName("display_name");
 
                     b.Property<string>("FilePath")
-                        .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("varchar(255)")
                         .HasColumnName("file_path");
@@ -159,7 +158,7 @@ namespace Boom.Infrastructure.Migrations
 
                     b.HasIndex("ThemeId");
 
-                    b.ToTable("level");
+                    b.ToTable("levels");
                 });
 
             modelBuilder.Entity("Boom.Infrastructure.Data.Entities.LevelTarget", b =>
@@ -228,13 +227,11 @@ namespace Boom.Infrastructure.Migrations
                         .HasColumnName("created_at");
 
                     b.Property<string>("Device")
-                        .IsRequired()
                         .HasMaxLength(30)
                         .HasColumnType("varchar(30)")
                         .HasColumnName("device");
 
                     b.Property<string>("Email")
-                        .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("varchar(20)")
                         .HasColumnName("email");
@@ -250,7 +247,6 @@ namespace Boom.Infrastructure.Migrations
                         .HasColumnName("facebook_id");
 
                     b.Property<string>("Fullname")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)")
                         .HasColumnName("fullname");
@@ -262,7 +258,6 @@ namespace Boom.Infrastructure.Migrations
                         .HasColumnName("hero_style");
 
                     b.Property<string>("Ios")
-                        .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("varchar(20)")
                         .HasColumnName("ios");
@@ -278,7 +273,6 @@ namespace Boom.Infrastructure.Migrations
                         .HasColumnName("max_group_id_unlocked");
 
                     b.Property<string>("Nickname")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)")
                         .HasColumnName("nickname");
@@ -294,7 +288,6 @@ namespace Boom.Infrastructure.Migrations
                         .HasColumnName("rev");
 
                     b.Property<string>("SecretKey")
-                        .IsRequired()
                         .HasMaxLength(25)
                         .HasColumnType("varchar(25)")
                         .HasColumnName("secret_key");
@@ -310,7 +303,6 @@ namespace Boom.Infrastructure.Migrations
                         .HasColumnName("timezone_seconds_offset");
 
                     b.Property<string>("TinyUrl")
-                        .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("varchar(20)")
                         .HasColumnName("tiny_url");

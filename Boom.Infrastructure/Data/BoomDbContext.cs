@@ -18,10 +18,10 @@ public class BoomDbContext(DbContextOptions<BoomDbContext> options) : DbContext(
     public DbSet<Theme> Themes { get; set; } = null!;
     public DbSet<User> Users { get; set; } = null!;
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder
-            .UseAsyncSeeding(async (context, _, cancellationToken) =>
-            {
-                SeedHelper.SeedLevels(context, cancellationToken);
-            });
+    // protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    //     => optionsBuilder
+    //         .UseAsyncSeeding(async (context, _, cancellationToken) =>
+    //         {
+    //             SeedHelper.SeedLevels(context, cancellationToken);
+    //         });
 }

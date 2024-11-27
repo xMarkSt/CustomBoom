@@ -110,6 +110,41 @@ public class SeedHelper
                 Id = 20, DisplayName = "Loooops", LevelId = "Loooops", ThemeId = 1, Online = false,
                 Custom = false, Version = 1, BgId = 1, FilePath = null
             },
+            new()
+            {
+                Id = 21, DisplayName = "Rocket Maze", LevelId = "RocketMaze", ThemeId = 1, Online = false,
+                Custom = false, Version = 1, BgId = 1, FilePath = null
+            },
+            new()
+            {
+                Id = 22, DisplayName = "Bridges", LevelId = "Bridges", ThemeId = 1, Online = false, Custom = false,
+                Version = 1, BgId = 1, FilePath = null
+            },
+            new()
+            {
+                Id = 23, DisplayName = "Big Air", LevelId = "BigAir", ThemeId = 1, Online = false, Custom = false,
+                Version = 1, BgId = 1, FilePath = null
+            },
+            new()
+            {
+                Id = 24, DisplayName = "Underwater", LevelId = "Underwater", ThemeId = 1, Online = false,
+                Custom = false, Version = 1, BgId = 1, FilePath = null
+            },
+            new()
+            {
+                Id = 25, DisplayName = "Boost Race 2", LevelId = "BoostRace2", ThemeId = 1, Online = false,
+                Custom = false, Version = 2, BgId = 1, FilePath = null
+            },
+            new()
+            {
+                Id = 26, DisplayName = "Pinball I", LevelId = "PinballI", ThemeId = 1, Online = false, Custom = false,
+                Version = 1, BgId = 1, FilePath = null
+            },
+            new()
+            {
+                Id = 27, DisplayName = "Rocket Madness", LevelId = "RocketMadness", ThemeId = 1, Online = false,
+                Custom = false, Version = 1, BgId = 1, FilePath = null
+            }
         };
 
         await context.Set<Level>().AddRangeAsync(levels, cancellationToken);
