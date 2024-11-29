@@ -26,10 +26,14 @@ public class TournamentService : ITournamentService
     /// Get the currently scheduled tournament group
     /// </summary>
     /// <returns></returns>
-    public async Task<ScheduleDto> GetScheduled()
+    public async Task<ScheduleDto> GetSchedule()
     {
         var current = await _repository.GetAll<TournamentGroup>()
-            // .Where(x => x.EndsAt > DateTime.Now) // Todo: disabled For testing
+            .Where(x => x.EndsAt > DateTime.Now)
+            .Include(x => x.LevelTarget.Level)
+            .Include(x => x.LevelTarget.Level.Theme)
+            .Include(x => x.LevelTarget.Level.Background)
+            .Include(x => x.LevelTarget.Target)
             .OrderBy(x => x.EndsAt)
             .FirstOrDefaultAsync();
         return new ScheduleDto()

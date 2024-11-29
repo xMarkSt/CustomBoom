@@ -85,7 +85,7 @@ public class UnitTest1
 
         // Act
         var service = new TournamentService(mockRepo.Object, mapper);
-        var res = await service.GetScheduled();
+        var res = await service.GetSchedule();
     }
 
     [Test]
@@ -96,7 +96,7 @@ public class UnitTest1
         {
             Uuid = Guid.NewGuid(),
             LevelId = 1,
-            LevelTarget = new LevelTargetDto
+            Level = new LevelTargetDto
             {
                 ThemeName = "MyTheme",
                 LevelName = "Dummy Level",
@@ -116,7 +116,7 @@ public class UnitTest1
         {
             Uuid = Guid.NewGuid(),
             LevelId = 2,
-            LevelTarget = new LevelTargetDto
+            Level = new LevelTargetDto
             {
                 ThemeName = "Another Theme",
                 LevelName = "Another Level",

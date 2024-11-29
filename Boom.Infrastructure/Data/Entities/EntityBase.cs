@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Boom.Infrastructure.Data.Entities;
 
-public class EntityBase : IEntity
+public abstract class EntityBase : IEntity
 {
     [Key]
     [Column("id")]
@@ -14,14 +14,5 @@ public class EntityBase : IEntity
     public DateTime? CreatedAt { get; set; }
     
     [Column("updated_at")]
-    public DateTime? UpdatedAt { get; set; }
-}
-
-public interface IEntity
-{
-    long Id { get; set; }
-    
-    public DateTime? CreatedAt { get; set; }
-
     public DateTime? UpdatedAt { get; set; }
 }

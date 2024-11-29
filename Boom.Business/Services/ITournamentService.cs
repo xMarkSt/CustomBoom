@@ -7,5 +7,5 @@ namespace Boom.Business.Services;
 
 public interface ITournamentService
 {
-    Task<ScheduleDto> GetScheduled();
+    Task<ScheduleDto> GetSchedule();
 }

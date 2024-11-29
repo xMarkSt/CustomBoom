@@ -11,4 +11,6 @@ public interface IPlistSerializationService
     /// <param name="dto"></param>
     /// <returns></returns>
     NSDictionary SerializeToNSDictionary(IPlistSerializable dto);
+
+    string ToPlistString(IPlistSerializable dto);
 }

@@ -9,6 +9,11 @@ namespace Boom.Business.Services;
 
 public class PlistSerializationService : IPlistSerializationService
 {
+    public string ToPlistString(IPlistSerializable dto)
+    {
+        return SerializeToNSDictionary(dto).ToXmlPropertyList();
+    }
+    
     /// <summary>
     /// Serialize a dto type class to a NSDictionary.
     /// </summary>
