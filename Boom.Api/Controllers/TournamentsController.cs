@@ -1,9 +1,6 @@
+using System.Text;
 using Boom.Business.Services;
-using Boom.Infrastructure.Data;
-using Boom.Infrastructure.Data.Entities;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace Boom.Api.Controllers;
 
@@ -31,6 +28,6 @@ public class TournamentsController : ControllerBase
 
         if (currentTournament.Schedule.Count == 0) return NotFound();
 
-        return Ok(_plistService.ToPlistString(currentTournament));
+        return File(Encoding.UTF8.GetBytes(_plistService.ToPlistString(currentTournament)), "application/x-plist");
     }
 }
