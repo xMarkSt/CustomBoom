@@ -1,5 +1,6 @@
 using System.Text;
 using Boom.Business.Services;
+using Boom.Common;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Boom.Api.Controllers;
@@ -28,6 +29,14 @@ public class TournamentsController : ControllerBase
 
         if (currentTournament.Schedule.Count == 0) return NotFound();
 
-        return File(Encoding.UTF8.GetBytes(_plistService.ToPlistString(currentTournament)), "application/x-plist");
+        return PlistResult(currentTournament);
+    }
+
+    private ActionResult PlistResult(IPlistSerializable dto)
+    {
+        // TODO: if production, use encryption.
+        return File(
+            Encoding.UTF8.GetBytes(_plistService.ToPlistString(dto)),
+            "application/x-plist");
     }
 }
