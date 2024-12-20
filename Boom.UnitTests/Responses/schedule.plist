@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+   <dict>
+      <key>schedule</key>
+      <array>
+         <dict>
+            <key>uuid</key>
+            <string>800c4278-633d-45ac-9d97-4aad5950be6b</string>
+            <key>level_id</key>
+            <integer>61</integer>
+            <key>level</key>
+            <dict>
+               <key>theme_name</key>
+               <string>Frozen Hills</string>
+               <key>level_name</key>
+               <string>Waterslide</string>
+               <key>level_id</key>
+               <string>Waterslide:0</string>
+               <key>version</key>
+               <integer>1</integer>
+               <key>target</key>
+               <string />
+               <key>online</key>
+               <false />
+               <key>url</key>
+               <string />
+               <key>bgName</key>
+               <string>NorthBG.plist</string>
+            </dict>
+            <key>no_super</key>
+            <integer>0</integer>
+            <key>seconds_to_end</key>
+            <integer>69164</integer>
+            <key>seconds_to_start</key>
+            <integer>-17236</integer>
+         </dict>
+      </array>
+   </dict>
+</plist>

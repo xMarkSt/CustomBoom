@@ -10,6 +10,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="FluentAssertions" Version="7.0.0" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.6.0"/>
         <PackageReference Include="MockQueryable.Moq" Version="7.0.3" />
         <PackageReference Include="Moq" Version="4.20.72" />
@@ -23,6 +24,12 @@
     <ItemGroup>
       <ProjectReference Include="..\Boom.Business\Boom.Business.csproj" />
       <ProjectReference Include="..\Boom.Common\Boom.Common.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Update="Responses\schedule.plist">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
     </ItemGroup>
 
 </Project>
