@@ -1,4 +1,4 @@
-namespace Boom.Common.DTOs;
+namespace Boom.Common.DTOs.Response;
 
 public class ScheduleDto : IPlistSerializable
 {

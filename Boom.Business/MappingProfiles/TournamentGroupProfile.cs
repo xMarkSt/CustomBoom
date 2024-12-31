@@ -1,5 +1,6 @@
 using AutoMapper;
 using Boom.Common.DTOs;
+using Boom.Common.DTOs.Response;
 using Boom.Infrastructure.Data.Entities;
 
 namespace Boom.Business.MappingProfiles;

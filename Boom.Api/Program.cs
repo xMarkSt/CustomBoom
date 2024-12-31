@@ -19,7 +19,9 @@ builder.Services.AddDbContext<BoomDbContext>(options =>
 
 builder.Services.AddScoped(typeof(IRepository), typeof(Repository<BoomDbContext>));
 builder.Services.AddScoped<ITournamentService, TournamentService>();
+builder.Services.AddScoped<IPlayerService, PlayerService>();
 builder.Services.AddSingleton<IPlistSerializationService, PlistSerializationService>();
+builder.Services.AddSingleton<IEncryptionService, EncryptionService>();
 builder.Services.AddAutoMapper(typeof(TournamentGroupProfile));
 
 var app = builder.Build();

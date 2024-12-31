@@ -6,5 +6,6 @@
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=96916d18_002D00c8_002D4e3d_002Db76f_002D7e51699039b7/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="TestScheduleDto" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
   &lt;TestAncestor&gt;&#xD;
     &lt;TestId&gt;NUnit3x::9A760467-408D-4250-8ABC-7353FC4EEB51::net8.0::Boom.UnitTests.UnitTest1&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::9A760467-408D-4250-8ABC-7353FC4EEB51::net8.0::Boom.UnitTests.PlistSerializationServiceTests.TestSerialization&lt;/TestId&gt;&#xD;
   &lt;/TestAncestor&gt;&#xD;
 &lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>

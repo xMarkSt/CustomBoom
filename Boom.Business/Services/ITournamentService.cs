@@ -1,7 +1,4 @@
-using Boom.Common;
-using Boom.Common.DTOs;
-using Boom.Infrastructure.Data.Entities;
-using Claunia.PropertyList;
+using Boom.Common.DTOs.Response;
 
 namespace Boom.Business.Services;
 

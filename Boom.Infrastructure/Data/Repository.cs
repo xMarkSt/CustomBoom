@@ -19,11 +19,9 @@ public class Repository<TContext> : IRepository where TContext : DbContext
         {
             throw new ArgumentNullException("entity");
         }
-
-
+        
         _dbContext.Add(entity);
-
-
+        
         await _dbContext.SaveChangesAsync();
         return entity;
     }

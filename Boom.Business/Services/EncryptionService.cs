@@ -3,7 +3,7 @@ using System.Text;
 
 namespace Boom.Business.Services;
 
-public class EncryptionService
+public class EncryptionService : IEncryptionService
 {
     public string Encrypt(string payload, string key)
     {
@@ -92,7 +92,7 @@ public class EncryptionService
         }
     }
     
-    public static string GenerateSecretKey()
+    public string GenerateSecretKey()
     {
         try
         {
