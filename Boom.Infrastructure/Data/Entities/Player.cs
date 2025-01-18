@@ -111,7 +111,7 @@ public class Player : EntityBase
     [StringLength(50)]
     public string MaxGroupIdUnlocked { get; set; } = null!;
 
-    [Column("secret_key")]
+    [Column("secretKey")]
     [StringLength(25)]
     public string? SecretKey { get; set; }
 }
