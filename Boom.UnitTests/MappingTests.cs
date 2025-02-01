@@ -1,15 +1,11 @@
 using AutoMapper;
 using Boom.Business.MappingProfiles;
-using Boom.Business.Services;
-using Boom.Common.DTOs.Request;
-using Boom.Common.DTOs.Response;
-using Boom.Infrastructure.Data;
 using Boom.Infrastructure.Data.Entities;
 using FluentAssertions;
-using Moq;
 
 namespace Boom.UnitTests;
 
+[TestFixture]
 public class MappingTests
 {
     [Test]
@@ -34,7 +30,7 @@ public class MappingTests
         // mapped.Level.Should().Be(testData.level);
         mapped.MaxGroupIdUnlocked.Should().Be(testData.max_group_id_unlocked);
         mapped.Nickname.Should().Be(testData.nickname);
-        mapped.Nickname.Should().Be(testData.notification);
+        mapped.Notification.Should().Be(testData.notification);
         // mapped.Timestamp.Should().Be(testData.timestamp);
         mapped.Timezone.Should().Be(testData.timezone);
         mapped.TimezoneSecondsOffset.Should().Be(testData.timezone_seconds_offset);

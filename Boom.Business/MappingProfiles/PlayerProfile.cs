@@ -8,6 +8,9 @@ public class PlayerProfile : Profile
 {
     public PlayerProfile()
     {
-        CreateMap<GetScheduleDto, Player>();
+        SourceMemberNamingConvention = new LowerUnderscoreNamingConvention();
+        DestinationMemberNamingConvention = new PascalCaseNamingConvention();
+        CreateMap<GetScheduleDto, Player>()
+            .ForMember(dest => dest.Uuid, opt => opt.MapFrom(src => src.user_uuid));
     }
 }

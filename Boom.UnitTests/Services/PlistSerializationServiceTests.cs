@@ -1,10 +1,9 @@
 using Boom.Business.Services;
-using Boom.Common.DTOs;
 using Boom.Common.DTOs.Response;
 using Claunia.PropertyList;
 using FluentAssertions;
 
-namespace Boom.UnitTests;
+namespace Boom.UnitTests.Services;
 
 public class PlistSerializationServiceTests
 {
