@@ -37,12 +37,13 @@ namespace Boom.UnitTests.Services
             _mockEncryptionService.Setup(e => e.GenerateSecretKey()).Returns("secretkey");
 
             // Act
-            await _playerService.UpdatePlayer(dto);
+            var result = await _playerService.UpdatePlayer(dto);
 
             // Assert
             _mockRepository.Verify(r => r.CreateAsync(It.IsAny<Player>()), Times.Once);
             _mockRepository.Verify(r => r.UpdateAsync(It.IsAny<Player>()), Times.Never);
             player.SecretKey.Should().Be("secretkey");
+            result.Should().BeSameAs(player);
         }
 
         [Test]
@@ -50,16 +51,18 @@ namespace Boom.UnitTests.Services
         {
             // Arrange
             var dto = new GetScheduleDto { user_uuid = Guid.NewGuid() };
-            var existingPlayer = new Player { Uuid = dto.user_uuid };
+            var existingPlayer = new Player { Uuid = dto.user_uuid, SecretKey = "persisted" };
             var players = new List<Player> { existingPlayer }.AsQueryable().BuildMock();
             _mockRepository.Setup(r => r.GetAll<Player>()).Returns(players);
 
             // Act
-            await _playerService.UpdatePlayer(dto);
+            var result = await _playerService.UpdatePlayer(dto);
 
             // Assert
             _mockRepository.Verify(r => r.CreateAsync(It.IsAny<Player>()), Times.Never);
             _mockRepository.Verify(r => r.UpdateAsync(existingPlayer), Times.Once);
+            result.Should().BeSameAs(existingPlayer);
+            existingPlayer.SecretKey.Should().Be("persisted");
         }
     }
 }

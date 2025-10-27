@@ -31,8 +31,9 @@ public class TournamentsController : ControllerBase
     public async Task<ActionResult<string>> Schedule([FromForm] GetScheduleDto dto)
     {
         // Meta stuff:
-        await _playerService.UpdatePlayer(dto);
-        
+        var player = await _playerService.UpdatePlayer(dto);
+        var requestEncrypted = false;
+
         // check secret key
         // if (!$request->input('requestEncrypted')) {
         //     if (!empty($player->secretKey)) {
@@ -45,6 +46,11 @@ public class TournamentsController : ControllerBase
         // Actual tournament stuff:
 
         var currentTournament = await _tournamentService.GetSchedule();
+
+        if (!requestEncrypted && !string.IsNullOrEmpty(player.SecretKey))
+        {
+            currentTournament.SecretKey = player.SecretKey;
+        }
 
         if (currentTournament.Schedule.Count == 0) return NotFound();
 

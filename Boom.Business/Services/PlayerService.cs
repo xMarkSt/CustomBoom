@@ -19,28 +19,30 @@ public class PlayerService : IPlayerService
         _mapper = mapper;
     }
 
-    private async Task CreatePlayer(GetScheduleDto dto)
+    private async Task<Player> CreatePlayer(GetScheduleDto dto)
     {
         // Create player
         var player = _mapper.Map<Player>(dto);
         player.SecretKey = _encryptionService.GenerateSecretKey();
         await _repository.CreateAsync(player);
+        return player;
     }
 
-    public async Task UpdatePlayer(GetScheduleDto dto)
+    public async Task<Player> UpdatePlayer(GetScheduleDto dto)
     {
         var player = await _repository.GetAll<Player>().FirstOrDefaultAsync(p => p.Uuid == dto.user_uuid);
 
         // Uuid sent by client not in database yet, create the new player.
         if (player == null)
         {
-            await CreatePlayer(dto);
+            return await CreatePlayer(dto);
         }
         
         // Update existing player
         else
         {
             await _repository.UpdateAsync(player);
+            return player;
         }
     }
 }

@@ -22,4 +22,19 @@ public class PlistSerializationServiceTests
         
         res.ToXmlPropertyList().Should().BeEquivalentTo(actualDict.ToXmlPropertyList());
     }
+
+    [Test]
+    public void SerializeToNSDictionary_IncludesSecretKey_WhenPresent()
+    {
+        var service = new PlistSerializationService();
+        var dto = new ScheduleDto
+        {
+            SecretKey = "__abc.12345678",
+            Schedule = []
+        };
+
+        var plist = service.SerializeToNSDictionary(dto);
+
+        plist.ToXmlPropertyList().Should().Contain("_sk");
+    }
 }
