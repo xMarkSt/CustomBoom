@@ -1,4 +1,5 @@
 using System.Text;
+using Boom.Api.Middleware;
 using Boom.Business.Services;
 using Boom.Common;
 using Boom.Common.DTOs.Request;
@@ -32,7 +33,8 @@ public class TournamentsController : ControllerBase
     {
         // Meta stuff:
         var player = await _playerService.UpdatePlayer(dto);
-        var requestEncrypted = false;
+        var requestEncrypted = HttpContext.Items.TryGetValue(RequestDecryptionMiddleware.RequestEncryptedItemKey, out var item)
+            && item is bool encrypted && encrypted;
 
         // check secret key
         // if (!$request->input('requestEncrypted')) {

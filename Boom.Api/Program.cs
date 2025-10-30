@@ -1,3 +1,4 @@
+using Boom.Api.Middleware;
 using Boom.Business.MappingProfiles;
 using Boom.Business.Services;
 using Boom.Infrastructure.Data;
@@ -32,6 +33,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseMiddleware<RequestDecryptionMiddleware>();
 
 app.UseHttpsRedirection();
 
