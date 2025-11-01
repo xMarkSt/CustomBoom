@@ -1,6 +1,10 @@
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
+using System.Threading.Tasks;
 using Boom.Business.Services;
 using Boom.Infrastructure.Data;
 using Boom.Infrastructure.Data.Entities;
@@ -92,7 +96,7 @@ public class RequestDecryptionMiddleware
             }
 
             ReplaceRequestBody(context.Request, decryptedPayload, envelope.ContentType);
-            context.Features.Set<IFormFeature>(new FormFeature(parsedForm));
+            context.Features.Set<IFormFeature>(new DecryptedFormFeature(context.Request, parsedForm));
             context.Items[RequestEncryptedItemKey] = true;
         }
         catch (Exception ex)
@@ -287,6 +291,29 @@ public class RequestDecryptionMiddleware
     private static string? GetFirstValue(Dictionary<string, StringValues> values, string key)
     {
         return values.TryGetValue(key, out var value) ? value.FirstOrDefault() : null;
+    }
+
+    private sealed class DecryptedFormFeature : IFormFeature
+    {
+        private readonly HttpRequest _request;
+        private IFormCollection? _form;
+
+        public DecryptedFormFeature(HttpRequest request, IFormCollection form)
+        {
+            _request = request ?? throw new ArgumentNullException(nameof(request));
+            _form = form ?? throw new ArgumentNullException(nameof(form));
+        }
+
+        public bool HasFormContentType => _request.HasFormContentType;
+
+        public IFormCollection Form
+        {
+            get => _form ??= new FormCollection(new Dictionary<string, StringValues>(StringComparer.OrdinalIgnoreCase));
+            set => _form = value;
+        }
+
+        public Task<IFormCollection> ReadFormAsync(CancellationToken cancellationToken = default)
+            => Task.FromResult(Form);
     }
 
     private sealed class EncryptedRequestEnvelope
