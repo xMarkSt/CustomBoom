@@ -60,6 +60,49 @@ public class RequestDecryptionMiddlewareTests
     }
 
     [Test]
+    public async Task InvokeAsync_SetsHasFormContentTypeForDecryptedPayloads()
+    {
+        var playerUuid = Guid.NewGuid();
+        var encryptedPayload = "encrypted";
+        var decryptedPayload = $"user_uuid={Uri.EscapeDataString(playerUuid.ToString())}&badge=2&nickname=Form";
+        var player = new Player
+        {
+            Uuid = playerUuid,
+            SecretKey = "secret"
+        };
+
+        var repository = new Mock<IRepository>();
+        repository.Setup(r => r.GetAll<Player>()).Returns(new[] { player }.AsQueryable());
+
+        var encryption = new Mock<IEncryptionService>();
+        encryption.Setup(s => s.GetDecryptionKey(player.SecretKey!)).Returns("derived");
+        encryption.Setup(s => s.Decrypt(encryptedPayload, "derived", "iv")).Returns(decryptedPayload);
+
+        var services = new ServiceCollection();
+        services.AddSingleton(repository.Object);
+        services.AddSingleton(encryption.Object);
+        services.AddSingleton(Mock.Of<IPlayerService>());
+        var provider = services.BuildServiceProvider();
+        var scopeFactory = provider.GetRequiredService<IServiceScopeFactory>();
+
+        var middleware = new RequestDecryptionMiddleware(_ => Task.CompletedTask, scopeFactory, NullLogger<RequestDecryptionMiddleware>.Instance);
+
+        var context = new DefaultHttpContext();
+        context.Request.Method = HttpMethods.Post;
+        context.Request.QueryString = QueryString.Create(new Dictionary<string, string?>
+        {
+            ["_p"] = encryptedPayload,
+            ["_s"] = "iv",
+            ["_u"] = playerUuid.ToString(),
+            ["_ct"] = "application/x-www-form-urlencoded"
+        });
+
+        await middleware.InvokeAsync(context);
+
+        context.Request.HasFormContentType.Should().BeTrue();
+    }
+
+    [Test]
     public async Task InvokeAsync_PlayerMissing_DoesNotAlterRequest()
     {
         var repository = new Mock<IRepository>();

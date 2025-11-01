@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Primitives;
+using Microsoft.Net.Http.Headers;
 
 namespace Boom.Api.Middleware;
 
@@ -295,16 +296,20 @@ public class RequestDecryptionMiddleware
 
     private sealed class DecryptedFormFeature : IFormFeature
     {
-        private readonly HttpRequest _request;
+        private readonly string? _contentType;
         private IFormCollection? _form;
 
         public DecryptedFormFeature(HttpRequest request, IFormCollection form)
         {
-            _request = request ?? throw new ArgumentNullException(nameof(request));
+            if (request is null)
+            {
+                throw new ArgumentNullException(nameof(request));
+            }
             _form = form ?? throw new ArgumentNullException(nameof(form));
+            _contentType = request.ContentType;
         }
 
-        public bool HasFormContentType => _request.HasFormContentType;
+        public bool HasFormContentType => IsFormContentType(_contentType);
 
         public IFormCollection Form
         {
@@ -314,6 +319,29 @@ public class RequestDecryptionMiddleware
 
         public Task<IFormCollection> ReadFormAsync(CancellationToken cancellationToken = default)
             => Task.FromResult(Form);
+
+        private static bool IsFormContentType(string? contentType)
+        {
+            if (string.IsNullOrWhiteSpace(contentType))
+            {
+                return false;
+            }
+
+            if (!MediaTypeHeaderValue.TryParse(contentType, out var parsed))
+            {
+                return false;
+            }
+
+            var mediaType = parsed.MediaType;
+            if (string.IsNullOrEmpty(mediaType))
+            {
+                return false;
+            }
+
+            return mediaType.Equals("application/x-www-form-urlencoded", StringComparison.OrdinalIgnoreCase)
+                || mediaType.Equals("multipart/form-data", StringComparison.OrdinalIgnoreCase)
+                || mediaType.Equals("text/plain", StringComparison.OrdinalIgnoreCase);
+        }
     }
 
     private sealed class EncryptedRequestEnvelope
