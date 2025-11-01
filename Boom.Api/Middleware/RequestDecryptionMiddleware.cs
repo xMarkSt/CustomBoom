@@ -317,6 +317,11 @@ public class RequestDecryptionMiddleware
             set => _form = value;
         }
 
+        public IFormCollection ReadForm()
+        {
+            return Form;
+        }
+
         public Task<IFormCollection> ReadFormAsync(CancellationToken cancellationToken = default)
             => Task.FromResult(Form);
 
@@ -333,7 +338,7 @@ public class RequestDecryptionMiddleware
             }
 
             var mediaType = parsed.MediaType;
-            if (string.IsNullOrEmpty(mediaType))
+            if (mediaType == null || mediaType == "")
             {
                 return false;
             }
