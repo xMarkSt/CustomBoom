@@ -1,12 +1,7 @@
-using System.Collections;
-using System.Reflection;
 using AutoMapper;
-using Boom.Common;
-using Boom.Common.DTOs;
-using Boom.Common.Extensions;
+using Boom.Common.DTOs.Response;
 using Boom.Infrastructure.Data;
 using Boom.Infrastructure.Data.Entities;
-using Claunia.PropertyList;
 using Microsoft.EntityFrameworkCore;
 
 namespace Boom.Business.Services;
@@ -36,9 +31,10 @@ public class TournamentService : ITournamentService
             .Include(x => x.LevelTarget.Target)
             .OrderBy(x => x.EndsAt)
             .FirstOrDefaultAsync();
-        return new ScheduleDto()
+        
+        return new ScheduleDto
         {
-            Schedule = [_mapper.Map<TournamentGroupDto>(current)]
+            Schedule = current != null ? [_mapper.Map<TournamentGroupDto>(current)] : []
         };
     }
 }
