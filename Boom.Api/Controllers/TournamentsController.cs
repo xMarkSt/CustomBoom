@@ -1,7 +1,6 @@
-using System.Text;
+using Boom.Api.Filters;
 using Boom.Api.Middleware;
 using Boom.Business.Services;
-using Boom.Common;
 using Boom.Common.DTOs.Request;
 using Microsoft.AspNetCore.Mvc;
 
@@ -27,16 +26,17 @@ public class TournamentsController : ControllerBase
         _playerService = playerService;
     }
 
-    // TODO: make plist result
     [HttpPost]
+    [EncryptResponse]
     public async Task<ActionResult<string>> Schedule([FromForm] GetScheduleDto dto)
     {
         // Meta stuff:
         var player = await _playerService.UpdatePlayer(dto);
-        
+
         // check secret key
-        var requestEncrypted = HttpContext.Items.TryGetValue(RequestDecryptionMiddleware.RequestEncryptedItemKey, out var item)
-                               && item is true;
+        var requestEncrypted =
+            HttpContext.Items.TryGetValue(RequestDecryptionMiddleware.RequestEncryptedItemKey, out var item)
+            && item is true;
 
         // Actual tournament stuff:
         var currentTournament = await _tournamentService.GetSchedule();
@@ -49,15 +49,6 @@ public class TournamentsController : ControllerBase
 
         if (currentTournament.Schedule.Count == 0) return NotFound();
 
-        return PlistResult(currentTournament);
-    }
-
-    private ActionResult PlistResult(IPlistSerializable dto)
-    {
-        // TODO: use encryption if enabled in settings
-        // return _encryptionService.Encrypt(_plistService.ToPlistString(dto));
-        return File(
-            Encoding.UTF8.GetBytes(_plistService.ToPlistString(dto)),
-            "application/x-plist");
+        return Ok(currentTournament);
     }
 }

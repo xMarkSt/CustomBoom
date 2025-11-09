@@ -1,3 +1,4 @@
+using Boom.Api.Filters;
 using Boom.Api.Middleware;
 using Boom.Business.MappingProfiles;
 using Boom.Business.Services;
@@ -23,6 +24,7 @@ builder.Services.AddScoped<ITournamentService, TournamentService>();
 builder.Services.AddScoped<IPlayerService, PlayerService>();
 builder.Services.AddSingleton<IPlistSerializationService, PlistSerializationService>();
 builder.Services.AddSingleton<IEncryptionService, EncryptionService>();
+builder.Services.AddScoped<EncryptResponseFilter>();
 builder.Services.AddAutoMapper(typeof(TournamentGroupProfile));
 
 var app = builder.Build();

@@ -9,6 +9,7 @@ namespace Boom.Api.Middleware;
 public class RequestDecryptionMiddleware
 {
     public const string RequestEncryptedItemKey = "RequestEncrypted";
+    public const string EncryptionKeyItemKey = "EncryptionKey";
 
     private readonly RequestDelegate _next;
     private readonly IEncryptionService _encryptionService;
@@ -77,6 +78,7 @@ public class RequestDecryptionMiddleware
             ReplaceRequestBody(context.Request, decryptedPayload, envelope.ContentType);
             context.Features.Set<IFormFeature>(null); // force reparse of form
             context.Items[RequestEncryptedItemKey] = true;
+            context.Items[EncryptionKeyItemKey] = decryptionKey;
         }
         catch (Exception ex)
         {
