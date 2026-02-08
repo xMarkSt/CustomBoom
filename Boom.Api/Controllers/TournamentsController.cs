@@ -47,4 +47,19 @@ public class TournamentsController : ControllerBase
 
         return Ok(currentTournament);
     }
+
+    [HttpPost]
+    [EncryptResponse]
+    public async Task<ActionResult<string>> Join([FromForm] JoinTournamentDto dto)
+    {
+        // Mapping works!
+        
+        // Meta stuff:
+        var player = await _playerService.UpdatePlayer(dto);
+        
+        await _tournamentService.Join(dto);
+        
+        return StatusCode(500);    
+    }
+    
 }

@@ -5,5 +5,5 @@ namespace Boom.Business.Services;
 
 public interface IPlayerService
 {
-    Task<Player> UpdatePlayer(GetScheduleDto dto);
+    Task<Player> UpdatePlayer(IPlayerInfo playerInfo);
 }

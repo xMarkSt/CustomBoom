@@ -1,4 +1,5 @@
 using AutoMapper;
+using Boom.Common.DTOs.Request;
 using Boom.Common.DTOs.Response;
 using Boom.Infrastructure.Data;
 using Boom.Infrastructure.Data.Entities;
@@ -36,5 +37,20 @@ public class TournamentService : ITournamentService
         {
             Schedule = current != null ? [_mapper.Map<TournamentGroupDto>(current)] : []
         };
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="dto"></param>
+    /// <returns>Success, true if joined. False if not.</returns>
+    public async Task<bool> Join(JoinTournamentDto dto)
+    {
+        // NEXT:
+        
+        // Get the tournament group by dto.GroupUuid -> first
+        _tournament = await _repository.GetAll
+        // Can only join current tournament.
+        //if (Carbon::now()->lessThanOrEqualTo(tournament.EndTime)) { return false
     }
 }

@@ -1,8 +1,9 @@
+using Boom.Business.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Boom.Common.DTOs.Request;
 
-public class GetScheduleDto
+public class GetScheduleDto : IPlayerInfo
 {
     [FromForm(Name = "_id")]
     public string? _id { get; set; }
