@@ -9,24 +9,24 @@ public static class TestData
         new()
         {
             _id = "abc123",
-            badge = 42,
-            country_code = "US",
-            email = "test@example.com",
-            engine_style = "Sport",
-            fullname = "John Doe",
-            hero_style = "Warrior",
-            level = 15,
-            max_group_id_unlocked = "group_7",
-            nickname = "Speedster",
-            notification = "Enabled",
-            timestamp = 1672531200000, // Unix timestamp in milliseconds
-            timezone = "America/New_York",
-            timezone_seconds_offset = -18000, // UTC-5 in seconds
-            total_distance = 1523.45,
-            total_earned_medals = 12,
-            total_earned_superstars = 5,
-            user_uuid = Guid.NewGuid(),
-            wheel_style = "Alloy"
+            Badge = 42,
+            CountryCode = "US",
+            Email = "test@example.com",
+            EngineStyle = "Sport",
+            Fullname = "John Doe",
+            HeroStyle = "Warrior",
+            Level = 15,
+            MaxGroupIdUnlocked = "group_7",
+            Nickname = "Speedster",
+            Notification = "Enabled",
+            Timestamp = 1672531200000, // Unix timestamp in milliseconds
+            Timezone = "America/New_York",
+            TimezoneSecondsOffset = -18000, // UTC-5 in seconds
+            TotalDistance = 1523.45,
+            TotalEarnedMedals = 12,
+            TotalEarnedSuperstars = 5,
+            UserUuid = Guid.NewGuid(),
+            WheelStyle = "Alloy"
         };
 
     public static TournamentGroupDto TournamentGroupDto =>

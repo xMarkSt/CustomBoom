@@ -30,7 +30,7 @@ namespace Boom.UnitTests.Services
         public async Task UpdatePlayer_PlayerDoesNotExist_CreatesNewPlayer()
         {
             // Arrange
-            var dto = new GetScheduleDto { user_uuid = Guid.NewGuid() };
+            var dto = new GetScheduleDto { UserUuid = Guid.NewGuid() };
             var player = new Player();
             _mockRepository.Setup(r => r.GetAll<Player>()).Returns(new List<Player>().AsQueryable().BuildMock());
             _mockMapper.Setup(m => m.Map<Player>(dto)).Returns(player);
@@ -50,8 +50,8 @@ namespace Boom.UnitTests.Services
         public async Task UpdatePlayer_PlayerExists_UpdatesExistingPlayer()
         {
             // Arrange
-            var dto = new GetScheduleDto { user_uuid = Guid.NewGuid() };
-            var existingPlayer = new Player { Uuid = dto.user_uuid, SecretKey = "persisted" };
+            var dto = new GetScheduleDto { UserUuid = Guid.NewGuid() };
+            var existingPlayer = new Player { Uuid = dto.UserUuid, SecretKey = "persisted" };
             var players = new List<Player> { existingPlayer }.AsQueryable().BuildMock();
             _mockRepository.Setup(r => r.GetAll<Player>()).Returns(players);
 

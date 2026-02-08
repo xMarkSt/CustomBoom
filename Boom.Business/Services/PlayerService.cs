@@ -30,7 +30,7 @@ public class PlayerService : IPlayerService
 
     public async Task<Player> UpdatePlayer(GetScheduleDto dto)
     {
-        var player = await _repository.GetAll<Player>().FirstOrDefaultAsync(p => p.Uuid == dto.user_uuid);
+        var player = await _repository.GetAll<Player>().FirstOrDefaultAsync(p => p.Uuid == dto.UserUuid);
 
         // Uuid sent by client not in database yet, create the new player.
         if (player == null)

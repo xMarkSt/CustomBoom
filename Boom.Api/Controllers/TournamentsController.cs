@@ -11,19 +11,15 @@ namespace Boom.Api.Controllers;
 public class TournamentsController : ControllerBase
 {
     private readonly ITournamentService _tournamentService;
-    private readonly IPlistSerializationService _plistService;
-    private readonly IEncryptionService _encryptionService;
     private readonly IPlayerService _playerService;
+    private readonly IConfiguration _configuration;
 
     public TournamentsController(
-        ITournamentService tournamentService,
-        IPlistSerializationService plistService,
-        IEncryptionService encryptionService, IPlayerService playerService)
+        ITournamentService tournamentService, IPlayerService playerService, IConfiguration configuration)
     {
         _tournamentService = tournamentService;
-        _plistService = plistService;
-        _encryptionService = encryptionService;
         _playerService = playerService;
+        _configuration = configuration;
     }
 
     [HttpPost]
@@ -42,7 +38,7 @@ public class TournamentsController : ControllerBase
         var currentTournament = await _tournamentService.GetSchedule();
 
         // If not encrypted, add the secret key to make the requests encrypted
-        if (!requestEncrypted && !string.IsNullOrEmpty(player.SecretKey))
+        if (!_configuration.GetValue<bool>("DisableEncryption") && !requestEncrypted && !string.IsNullOrEmpty(player.SecretKey))
         {
             currentTournament.SecretKey = player.SecretKey;
         }

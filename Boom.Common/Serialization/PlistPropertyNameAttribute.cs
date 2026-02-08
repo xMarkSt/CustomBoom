@@ -1,4 +1,4 @@
-namespace Boom.Common.DTOs;
+namespace Boom.Common.Serialization;
 
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
 public class PlistPropertyNameAttribute : Attribute

@@ -21,23 +21,23 @@ public class MappingTests
         // Act
         var mapped = mapper.Map<Player>(testData);
 
-        mapped.Badge.Should().Be(testData.badge);
-        mapped.CountryCode.Should().Be(testData.country_code);
-        mapped.Email.Should().Be(testData.email);
-        mapped.EngineStyle.Should().Be(testData.engine_style);
-        mapped.Fullname.Should().Be(testData.fullname);
-        mapped.HeroStyle.Should().Be(testData.hero_style);
+        mapped.Badge.Should().Be(testData.Badge);
+        mapped.CountryCode.Should().Be(testData.CountryCode);
+        mapped.Email.Should().Be(testData.Email);
+        mapped.EngineStyle.Should().Be(testData.EngineStyle);
+        mapped.Fullname.Should().Be(testData.Fullname);
+        mapped.HeroStyle.Should().Be(testData.HeroStyle);
         // mapped.Level.Should().Be(testData.level);
-        mapped.MaxGroupIdUnlocked.Should().Be(testData.max_group_id_unlocked);
-        mapped.Nickname.Should().Be(testData.nickname);
-        mapped.Notification.Should().Be(testData.notification);
+        mapped.MaxGroupIdUnlocked.Should().Be(testData.MaxGroupIdUnlocked);
+        mapped.Nickname.Should().Be(testData.Nickname);
+        mapped.Notification.Should().Be(testData.Notification);
         // mapped.Timestamp.Should().Be(testData.timestamp);
-        mapped.Timezone.Should().Be(testData.timezone);
-        mapped.TimezoneSecondsOffset.Should().Be(testData.timezone_seconds_offset);
-        mapped.TotalDistance.Should().Be(testData.total_distance);
-        mapped.TotalEarnedMedals.Should().Be(testData.total_earned_medals);
-        mapped.TotalEarnedSuperstars.Should().Be(testData.total_earned_superstars);
-        mapped.Uuid.Should().Be(testData.user_uuid);
-        mapped.WheelStyle.Should().Be(testData.wheel_style);
+        mapped.Timezone.Should().Be(testData.Timezone);
+        mapped.TimezoneSecondsOffset.Should().Be(testData.TimezoneSecondsOffset);
+        mapped.TotalDistance.Should().Be(testData.TotalDistance);
+        mapped.TotalEarnedMedals.Should().Be(testData.TotalEarnedMedals);
+        mapped.TotalEarnedSuperstars.Should().Be(testData.TotalEarnedSuperstars);
+        mapped.Uuid.Should().Be(testData.UserUuid);
+        mapped.WheelStyle.Should().Be(testData.WheelStyle);
     }
 }
