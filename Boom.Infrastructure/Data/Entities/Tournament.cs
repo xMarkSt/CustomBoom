@@ -22,4 +22,5 @@ public class Tournament : EntityBase
 
     // Navigation property for the relationship
     public virtual TournamentGroup TournamentGroup { get; set; } = null!;
+    public virtual ICollection<Standing> Standings { get; set; } = new List<Standing>();
 }

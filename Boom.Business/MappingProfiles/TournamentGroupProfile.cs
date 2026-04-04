@@ -16,9 +16,9 @@ public class TournamentGroupProfile : Profile
                 opt => opt.MapFrom((src, _, _, context) =>
                     context.Mapper.Map<LevelTarget, LevelTargetDto>(src.LevelTarget)))
             .ForMember(dest => dest.SecondsToEnd, 
-                opt => opt.MapFrom(src => (src.EndsAt - DateTime.Now).TotalSeconds))
+                opt => opt.MapFrom(src => (src.EndsAt - DateTime.UtcNow).TotalSeconds))
             .ForMember(dest => dest.SecondsToStart, 
-                opt => opt.MapFrom(src => (src.StartsAt - DateTime.Now).TotalSeconds));
+                opt => opt.MapFrom(src => (src.StartsAt - DateTime.UtcNow).TotalSeconds));
 
         // todo: see php version
         CreateMap<LevelTarget, LevelTargetDto>()

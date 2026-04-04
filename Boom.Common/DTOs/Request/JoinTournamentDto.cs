@@ -22,7 +22,7 @@ namespace Boom.Common.DTOs.Request
         public string? Email { get; set; }
 
         [FromForm(Name = "engine_style")]
-        public string? EngineStyle { get; set; }
+        public required string EngineStyle { get; set; }
 
         [FromForm(Name = "fullname")]
         public string? FullName { get; set; }
@@ -31,7 +31,7 @@ namespace Boom.Common.DTOs.Request
         public Guid? GroupUuid { get; set; }
 
         [FromForm(Name = "hero_style")]
-        public string? HeroStyle { get; set; }
+        public required string HeroStyle { get; set; }
 
         [FromForm(Name = "max_group_id_unlocked")]
         public string? MaxGroupIdUnlocked { get; set; }
@@ -43,7 +43,7 @@ namespace Boom.Common.DTOs.Request
         public string? Notification { get; set; }
 
         [FromForm(Name = "time")]
-        public long? Time { get; set; }
+        public int Time { get; set; }
 
         [FromForm(Name = "timestamp")]
         public long? Timestamp { get; set; }
@@ -70,10 +70,10 @@ namespace Boom.Common.DTOs.Request
         public Guid Uuid { get; set; }
 
         [FromForm(Name = "wheel_style")]
-        public string? WheelStyle { get; set; }
+        public required string WheelStyle { get; set; }
 
         // Placeholder for the binary payload
         [FromForm(Name = "ghostData")]
-        public IFormFile? GhostData { get; set; }
+        public required IFormFile GhostData { get; set; }
     }
 }

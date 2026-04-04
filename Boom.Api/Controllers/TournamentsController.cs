@@ -2,6 +2,7 @@ using Boom.Api.Filters;
 using Boom.Api.Middleware;
 using Boom.Business.Services;
 using Boom.Common.DTOs.Request;
+using Boom.Infrastructure.Data.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Boom.Api.Controllers;
@@ -57,9 +58,18 @@ public class TournamentsController : ControllerBase
         // Meta stuff:
         var player = await _playerService.UpdatePlayer(dto);
         
-        await _tournamentService.Join(dto);
-        
-        return StatusCode(500);    
+        var tournament = await _tournamentService.Join(dto, player);
+
+        return Ok(tournament);
     }
     
+    [HttpPost]
+    public async Task<ActionResult<TournamentGroup>> Create([FromQuery] int durationHours = 24)
+    {
+        var duration = TimeSpan.FromHours(durationHours);
+
+        var result = await _tournamentService.CreateGroup(duration);
+
+        return Ok(result);
+    }
 }

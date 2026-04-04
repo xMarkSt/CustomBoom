@@ -4,7 +4,7 @@ namespace Boom.Infrastructure.Data;
 
 public interface IRepository
 {
-    Task<T> CreateAsync<T>(T entity) where T : class, IEntity;
+    Task<int> CreateAsync<T>(T entity) where T : class, IEntity;
     Task<IEnumerable<T>> CreateAsync<T>(IEnumerable<T> entity) where T : class, IEntity;
     Task<bool> RemoveAsync<TEntity>(TEntity entity) where TEntity : class, IEntity;
     Task<bool> RemoveRangeAsync<TEntity>(IEnumerable<TEntity> entity) where TEntity : class, IEntity;

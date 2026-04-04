@@ -50,8 +50,8 @@ public class UnitTest1
                 Uuid = Guid.NewGuid(),
                 LevelTargetId = 1,
                 NoSuper = true,
-                StartsAt = DateTime.Now.AddHours(-1),
-                EndsAt = DateTime.Now.AddHours(1),
+                StartsAt = DateTime.UtcNow.AddHours(-1),
+                EndsAt = DateTime.UtcNow.AddHours(1),
                 LevelTarget = new LevelTarget
                 {
                     Id = 1,

@@ -13,7 +13,7 @@ public class Repository<TContext> : IRepository where TContext : DbContext
         _dbContext = context;
     }
 
-    public async Task<T> CreateAsync<T>(T entity) where T : class, IEntity
+    public async Task<int> CreateAsync<T>(T entity) where T : class, IEntity
     {
         if (entity == null)
         {
@@ -22,8 +22,7 @@ public class Repository<TContext> : IRepository where TContext : DbContext
         
         _dbContext.Add(entity);
         
-        await _dbContext.SaveChangesAsync();
-        return entity;
+        return await _dbContext.SaveChangesAsync();
     }
 
     public async Task<IEnumerable<T>> CreateAsync<T>(IEnumerable<T> entity) where T : class, IEntity
