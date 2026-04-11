@@ -80,7 +80,7 @@ public class MappingTests
         dto.EngineStyle.Should().Be(player.EngineStyle);
         dto.WheelStyle.Should().Be(player.WheelStyle);
         dto.TotalHiddenPilesFound.Should().Be(player.TotalHiddenPilesFound!.Value);
-        dto.TournamentAggregatedRank.Should().Be(player.TournamentsAggregatedRank);
+        dto.TournamentsAggregatedRank.Should().Be(player.TournamentsAggregatedRank);
     }
 
     [Test]

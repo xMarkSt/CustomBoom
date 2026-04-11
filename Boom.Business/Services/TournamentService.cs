@@ -110,7 +110,7 @@ public class TournamentService : ITournamentService
 
     private JoinTournamentResponseDto BuildJoinResponse(Tournament tournament, Player player)
     {
-        var standingDtos = tournament.Standings
+        var sortedDtos = tournament.Standings
             .OrderBy(s => s.Time)
             .Select((s, index) =>
             {
@@ -121,11 +121,34 @@ public class TournamentService : ITournamentService
             })
             .ToList();
 
+        // Prepend a copy of the #1 standing at rank 0
+        var standings = sortedDtos.ToList();
+        if (sortedDtos.Count > 0)
+        {
+            var first = sortedDtos[0];
+            standings.Insert(0, new StandingDto
+            {
+                Id = first.Id,
+                TournamentId = first.TournamentId,
+                UserId = first.UserId,
+                GhostId = first.GhostId,
+                Time = first.Time,
+                HeroStyle = first.HeroStyle,
+                WheelStyle = first.WheelStyle,
+                EngineStyle = first.EngineStyle,
+                CreatedAt = first.CreatedAt,
+                UpdatedAt = first.UpdatedAt,
+                BoomUser = first.BoomUser,
+                IsSelf = first.IsSelf,
+                Rank = 0
+            });
+        }
+
         return new JoinTournamentResponseDto
         {
             Tournament = _mapper.Map<TournamentDto>(tournament),
-            Standings = standingDtos,
-            Rank = standingDtos.FirstOrDefault(s => s.IsSelf)?.Rank ?? 0
+            Standings = standings,
+            Rank = sortedDtos.FirstOrDefault(s => s.IsSelf)?.Rank ?? 0
         };
     }
 

@@ -25,7 +25,7 @@ public class PlayerDto : IPlistSerializable
     public string EngineStyle { get; set; }
     public string WheelStyle { get; set; }
     public int TotalHiddenPilesFound { get; set; }
-    public int TournamentAggregatedRank { get; set; }
+    public int TournamentsAggregatedRank { get; set; }
 
     // Nested profile DTO
     public PlayerProfileDto Profile { get; set; }

@@ -29,7 +29,7 @@ public class PlayerProfile : Profile
                 opt => opt.MapFrom(src => src.Rev ?? 0))
             .ForMember(dest => dest.TotalHiddenPilesFound,
                 opt => opt.MapFrom(src => src.TotalHiddenPilesFound ?? 0))
-            .ForMember(dest => dest.TournamentAggregatedRank,
+            .ForMember(dest => dest.TournamentsAggregatedRank,
                 opt => opt.MapFrom(src => src.TournamentsAggregatedRank))
             .ForMember(dest => dest.Profile,
                 opt => opt.MapFrom((src, _, _, context) =>
