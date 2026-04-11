@@ -14,7 +14,12 @@ public class MappingTests
     [SetUp]
     public void SetUp()
     {
-        var configuration = new MapperConfiguration(cfg => cfg.AddProfile(new PlayerProfile()));
+        var configuration = new MapperConfiguration(cfg =>
+        {
+            cfg.AddProfile(new PlayerProfile());
+            cfg.AddProfile(new StandingProfile());
+            cfg.AddProfile(new TournamentProfile());
+        });
         _mapper = new Mapper(configuration);
     }
 
@@ -121,5 +126,56 @@ public class MappingTests
         dto.Profile.TournamentStats.Won.Should().Be(player.WcWon);
         dto.Profile.TournamentStats.Played.Should().Be(player.WcPlayed);
         dto.Profile.TournamentStats.AveragePos.Should().Be(0);
+    }
+
+    [Test]
+    public void Test_Standing_StandingDto_Mapping()
+    {
+        var standing = TestData.Standing;
+
+        var dto = _mapper.Map<StandingDto>(standing);
+
+        dto.Id.Should().Be((int)standing.Id);
+        dto.TournamentId.Should().Be((int)standing.TournamentId);
+        dto.UserId.Should().Be((int)standing.UserId);
+        dto.GhostId.Should().Be((int)standing.GhostId);
+        dto.Time.Should().Be(standing.Time);
+        dto.HeroStyle.Should().Be(standing.HeroStyle);
+        dto.WheelStyle.Should().Be(standing.WheelStyle);
+        dto.EngineStyle.Should().Be(standing.EngineStyle);
+        dto.CreatedAt.Should().Be(standing.CreatedAt!.Value.ToString("o"));
+        dto.UpdatedAt.Should().Be(standing.UpdatedAt!.Value.ToString("o"));
+        dto.Rank.Should().Be(0);
+        dto.IsSelf.Should().Be(false);
+    }
+
+    [Test]
+    public void Test_Tournament_TournamentDto_Mapping()
+    {
+        var tournament = TestData.Tournament;
+
+        var dto = _mapper.Map<TournamentDto>(tournament);
+
+        dto.Id.Should().Be((int)tournament.Id);
+        dto.TournamentGroupId.Should().Be((int)tournament.TournamentGroupId);
+        dto.Uuid.Should().Be(tournament.Uuid);
+        dto.EloGroup.Should().Be(tournament.EloGroup);
+        dto.Cheaters.Should().Be(tournament.Cheaters);
+        dto.Users.Should().Be(tournament.Standings.Count);
+        dto.CreatedAt.Should().Be(tournament.CreatedAt!.Value.ToString("o"));
+        dto.UpdatedAt.Should().Be(tournament.UpdatedAt!.Value.ToString("o"));
+    }
+
+    [Test]
+    public void Test_Standing_BoomUser_Mapping()
+    {
+        var standing = TestData.Standing;
+
+        var dto = _mapper.Map<StandingDto>(standing);
+
+        dto.BoomUser.Should().NotBeNull();
+        dto.BoomUser.Id.Should().Be((int)standing.Player.Id);
+        dto.BoomUser.Uuid.Should().Be(standing.Player.Uuid);
+        dto.BoomUser.Nickname.Should().Be(standing.Player.Nickname);
     }
 }

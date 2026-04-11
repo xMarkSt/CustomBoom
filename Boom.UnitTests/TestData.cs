@@ -67,6 +67,35 @@ public static class TestData
             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc),
         };
 
+    public static Tournament Tournament =>
+        new()
+        {
+            Id = 5L,
+            TournamentGroupId = 12L,
+            Uuid = new Guid("b2c3d4e5-f6a7-8901-bcde-f12345678901"),
+            EloGroup = 2,
+            Cheaters = 1,
+            Standings = new List<Standing> { Standing, Standing },
+            CreatedAt = new DateTime(2024, 5, 1, 0, 0, 0, DateTimeKind.Utc),
+            UpdatedAt = new DateTime(2024, 5, 2, 0, 0, 0, DateTimeKind.Utc),
+        };
+
+    public static Standing Standing =>
+        new()
+        {
+            Id = 7L,
+            TournamentId = 42L,
+            UserId = 99L,
+            GhostId = 15L,
+            Time = 93500,
+            HeroStyle = "Warrior",
+            WheelStyle = "Alloy",
+            EngineStyle = "Sport",
+            CreatedAt = new DateTime(2024, 3, 10, 8, 0, 0, DateTimeKind.Utc),
+            UpdatedAt = new DateTime(2024, 3, 11, 9, 0, 0, DateTimeKind.Utc),
+            Player = Player
+        };
+
     public static TournamentGroupDto TournamentGroupDto =>
         new()
         {
