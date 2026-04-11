@@ -6,6 +6,7 @@ using Boom.Infrastructure.Data;
 using Boom.Infrastructure.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 using JoinTournamentDto = Boom.Common.DTOs.Request.JoinTournamentDto;
+using JoinTournamentResponseDto = Boom.Common.DTOs.Response.JoinTournamentDto;
 
 namespace Boom.Business.Services;
 
@@ -45,13 +46,15 @@ public class TournamentService : ITournamentService
     /// Player joins a tournament
     /// </summary>
     /// <param name="dto"></param>
-    /// <returns>Success, true if joined. False if not.</returns>
-    public async Task<Tournament?> Join(JoinTournamentDto dto, Player player)
+    /// <param name="player"></param>
+    /// <returns>The tournament result with standings and player rank. Null if group not found or ended.</returns>
+    public async Task<JoinTournamentResponseDto?> Join(JoinTournamentDto dto, Player player)
     {
         // Get the tournament group by uuid
         var tournamentGroup = await _repository.GetAll<TournamentGroup>()
             .Include(tg => tg.Tournaments)
             .ThenInclude(t => t.Standings)
+            .ThenInclude(s => s.Player)
             .FirstOrDefaultAsync(tg => tg.Uuid == dto.GroupUuid);
 
         // TournamentGroup not found or already ended
@@ -64,17 +67,20 @@ public class TournamentService : ITournamentService
         var tournament = tournamentGroup.Tournaments.Any()
             ? tournamentGroup.Tournaments.First()
             : await CreateTournament(tournamentGroup.Id);
-        
+
         // Check if player already has a standing
         var standing = tournament.Standings.FirstOrDefault(s => s.UserId == player.Id);
+        bool isNewStanding;
         if (standing != null)
         {
             if (standing.Time <= dto.Time)
-                return tournament; // existing time is faster or equal, no update needed
+                return BuildJoinResponse(tournament, player); // existing time is faster or equal, no update needed
+            isNewStanding = false;
         }
         else
         {
             standing = new Standing();
+            isNewStanding = true;
         }
 
         // Save ghost
@@ -90,10 +96,37 @@ public class TournamentService : ITournamentService
         standing.WheelStyle = dto.WheelStyle;
         standing.EngineStyle = dto.EngineStyle;
 
-        int result = await _repository.CreateAsync(standing);
+        await _repository.CreateAsync(standing);
+
+        if (isNewStanding)
+        {
+            standing.Player = player;
+            tournament.Standings.Add(standing);
+        }
 
         // TODO: discord broadcast
-        return tournament;
+        return BuildJoinResponse(tournament, player);
+    }
+
+    private JoinTournamentResponseDto BuildJoinResponse(Tournament tournament, Player player)
+    {
+        var standingDtos = tournament.Standings
+            .OrderBy(s => s.Time)
+            .Select((s, index) =>
+            {
+                var dto = _mapper.Map<StandingDto>(s);
+                dto.Rank = index + 1;
+                dto.IsSelf = s.UserId == player.Id;
+                return dto;
+            })
+            .ToList();
+
+        return new JoinTournamentResponseDto
+        {
+            Tournament = _mapper.Map<TournamentDto>(tournament),
+            Standings = standingDtos,
+            Rank = standingDtos.FirstOrDefault(s => s.IsSelf)?.Rank ?? 0
+        };
     }
 
     public async Task<TournamentGroup> CreateGroup(TimeSpan duration, LevelTarget? levelTarget = null)

@@ -53,14 +53,14 @@ public class TournamentsController : ControllerBase
     [EncryptResponse]
     public async Task<ActionResult<string>> Join([FromForm] JoinTournamentDto dto)
     {
-        // Mapping works!
-        
         // Meta stuff:
         var player = await _playerService.UpdatePlayer(dto);
         
-        var tournament = await _tournamentService.Join(dto, player);
+        var result = await _tournamentService.Join(dto, player);
 
-        return Ok(tournament);
+        if (result == null) return NotFound();
+
+        return Ok(result);
     }
     
     [HttpPost]
