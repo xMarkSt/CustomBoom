@@ -1,5 +1,6 @@
 using AutoMapper;
 using Boom.Business.MappingProfiles;
+using Boom.Common.DTOs.Response;
 using Boom.Infrastructure.Data.Entities;
 using FluentAssertions;
 
@@ -8,18 +9,21 @@ namespace Boom.UnitTests;
 [TestFixture]
 public class MappingTests
 {
+    private IMapper _mapper = null!;
+
+    [SetUp]
+    public void SetUp()
+    {
+        var configuration = new MapperConfiguration(cfg => cfg.AddProfile(new PlayerProfile()));
+        _mapper = new Mapper(configuration);
+    }
+
     [Test]
     public void Test_GetScheduleDto_Player_Mapping()
     {
-        // Arrange
-        var profile = new PlayerProfile();
-        var configuration = new MapperConfiguration(cfg => cfg.AddProfile(profile));
-        var mapper = new Mapper(configuration);
-
         var testData = TestData.GetScheduleDto;
 
-        // Act
-        var mapped = mapper.Map<Player>(testData);
+        var mapped = _mapper.Map<Player>(testData);
 
         mapped.Badge.Should().Be(testData.Badge);
         mapped.CountryCode.Should().Be(testData.CountryCode);
@@ -39,5 +43,83 @@ public class MappingTests
         mapped.TotalEarnedSuperstars.Should().Be(testData.TotalEarnedSuperstars);
         mapped.Uuid.Should().Be(testData.UserUuid);
         mapped.WheelStyle.Should().Be(testData.WheelStyle);
+    }
+
+    [Test]
+    public void Test_Player_PlayerDto_Mapping()
+    {
+        var player = TestData.Player;
+
+        var dto = _mapper.Map<PlayerDto>(player);
+
+        dto.Id.Should().Be((int)player.Id);
+        dto.Uuid.Should().Be(player.Uuid);
+        dto.FacebookId.Should().Be(player.FacebookId.ToString());
+        dto.TwitterId.Should().Be(player.TwitterId.ToString());
+        dto.Nickname.Should().Be(player.Nickname);
+        dto.Fullname.Should().Be(player.Fullname);
+        dto.Notification.Should().Be(player.Notification);
+        dto.Email.Should().Be(player.Email);
+        dto.Badge.Should().Be(player.Badge);
+        dto.LastLoginAt.Should().Be(player.LastLoginAt!.Value.ToString("o"));
+        dto.CountryCode.Should().Be(player.CountryCode);
+        dto.Timezone.Should().Be(player.Timezone);
+        dto.TimezoneSecondsOffset.Should().Be(player.TimezoneSecondsOffset);
+        dto.Rev.Should().Be(player.Rev!.Value);
+        dto.Device.Should().Be(player.Device);
+        dto.Ios.Should().Be(player.Ios);
+        dto.CreatedAt.Should().Be(player.CreatedAt!.Value.ToString("o"));
+        dto.UpdatedAt.Should().Be(player.UpdatedAt!.Value.ToString("o"));
+        dto.TinyUrl.Should().Be(player.TinyUrl);
+        dto.HeroStyle.Should().Be(player.HeroStyle);
+        dto.EngineStyle.Should().Be(player.EngineStyle);
+        dto.WheelStyle.Should().Be(player.WheelStyle);
+        dto.TotalHiddenPilesFound.Should().Be(player.TotalHiddenPilesFound!.Value);
+        dto.TournamentAggregatedRank.Should().Be(player.TournamentsAggregatedRank);
+    }
+
+    [Test]
+    public void Test_Player_PlayerProfileDto_Mapping()
+    {
+        var player = TestData.Player;
+
+        var dto = _mapper.Map<PlayerDto>(player);
+
+        dto.Profile.Should().NotBeNull();
+        dto.Profile.HeroStyle.Should().Be(player.HeroStyle);
+        dto.Profile.EngineStyle.Should().Be(player.EngineStyle);
+        dto.Profile.WheelStyle.Should().Be(player.WheelStyle);
+        dto.Profile.Nickname.Should().Be(player.Nickname);
+        dto.Profile.CountryCode.Should().Be(player.CountryCode);
+        dto.Profile.TotalEarnedMedals.Should().Be(player.TotalEarnedMedals);
+        dto.Profile.TotalEarnedSuperstars.Should().Be(player.TotalEarnedSuperstars);
+        dto.Profile.TotalDistance.Should().Be(player.TotalDistance);
+        dto.Profile.MaxGroupIdUnlocked.Should().Be(player.MaxGroupIdUnlocked);
+    }
+
+    [Test]
+    public void Test_Player_ChallengeStatsDto_Mapping()
+    {
+        var player = TestData.Player;
+
+        var dto = _mapper.Map<PlayerDto>(player);
+
+        dto.Profile.ChallengeStats.Should().NotBeNull();
+        dto.Profile.ChallengeStats.Won.Should().Be(player.VsWon);
+        dto.Profile.ChallengeStats.Played.Should().Be(player.VsPlayed);
+        dto.Profile.ChallengeStats.Lost.Should().Be(player.VsPlayed - player.VsWon);
+    }
+
+    [Test]
+    public void Test_Player_TournamentStatsDto_Mapping()
+    {
+        var player = TestData.Player;
+
+        var dto = _mapper.Map<PlayerDto>(player);
+
+        dto.Profile.TournamentStats.Should().NotBeNull();
+        dto.Profile.TournamentStats.Won.Should().Be(player.WcWon);
+        dto.Profile.TournamentStats.Played.Should().Be(player.WcPlayed);
+        dto.Profile.TournamentStats.AveragePos.Should().Be(0);
     }
 }

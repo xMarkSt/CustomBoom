@@ -12,7 +12,7 @@ public class StandingDto : IPlistSerializable
     public string EngineStyle { get; set; }
     public string CreatedAt { get; set; }
     public string UpdatedAt { get; set; }
-    public PlayerDto BoomUser { get; set; }  // or whatever your Player as DTO is
-    public int Rank { get; set; } // not from
+    public PlayerDto BoomUser { get; set; }
+    public int Rank { get; set; }
     public bool IsSelf { get; set; }
 }
