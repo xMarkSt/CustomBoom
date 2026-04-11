@@ -16,8 +16,8 @@ public class TournamentProfile : Profile
             .ForMember(dest => dest.Users,
                 opt => opt.MapFrom(src => src.Standings.Count))
             .ForMember(dest => dest.CreatedAt,
-                opt => opt.MapFrom(src => src.CreatedAt != null ? src.CreatedAt.Value.ToString("o") : null))
+                opt => opt.MapFrom(src => src.CreatedAt != null ? src.CreatedAt.Value.ToString("yyyy-MM-dd HH:mm:ss") : null))
             .ForMember(dest => dest.UpdatedAt,
-                opt => opt.MapFrom(src => src.UpdatedAt != null ? src.UpdatedAt.Value.ToString("o") : null));
+                opt => opt.MapFrom(src => src.UpdatedAt != null ? src.UpdatedAt.Value.ToString("yyyy-MM-dd HH:mm:ss") : null));
     }
 }

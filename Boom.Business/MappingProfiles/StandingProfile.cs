@@ -18,9 +18,9 @@ public class StandingProfile : Profile
             .ForMember(dest => dest.GhostId,
                 opt => opt.MapFrom(src => (int)src.GhostId))
             .ForMember(dest => dest.CreatedAt,
-                opt => opt.MapFrom(src => src.CreatedAt != null ? src.CreatedAt.Value.ToString("o") : null))
+                opt => opt.MapFrom(src => src.CreatedAt != null ? src.CreatedAt.Value.ToString("yyyy-MM-dd HH:mm:ss") : null))
             .ForMember(dest => dest.UpdatedAt,
-                opt => opt.MapFrom(src => src.UpdatedAt != null ? src.UpdatedAt.Value.ToString("o") : null))
+                opt => opt.MapFrom(src => src.UpdatedAt != null ? src.UpdatedAt.Value.ToString("yyyy-MM-dd HH:mm:ss") : null))
             .ForMember(dest => dest.BoomUser,
                 opt => opt.MapFrom((src, _, _, context) =>
                     context.Mapper.Map<PlayerDto>(src.Player)))

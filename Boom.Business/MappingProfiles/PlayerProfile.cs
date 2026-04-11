@@ -20,11 +20,11 @@ public class PlayerProfile : Profile
             .ForMember(dest => dest.TwitterId,
                 opt => opt.MapFrom(src => src.TwitterId != null ? src.TwitterId.ToString() : null))
             .ForMember(dest => dest.LastLoginAt,
-                opt => opt.MapFrom(src => src.LastLoginAt != null ? src.LastLoginAt.Value.ToString("o") : null))
+                opt => opt.MapFrom(src => src.LastLoginAt != null ? src.LastLoginAt.Value.ToString("yyyy-MM-dd HH:mm:ss") : null))
             .ForMember(dest => dest.CreatedAt,
-                opt => opt.MapFrom(src => src.CreatedAt != null ? src.CreatedAt.Value.ToString("o") : null))
+                opt => opt.MapFrom(src => src.CreatedAt != null ? src.CreatedAt.Value.ToString("yyyy-MM-dd HH:mm:ss") : null))
             .ForMember(dest => dest.UpdatedAt,
-                opt => opt.MapFrom(src => src.UpdatedAt != null ? src.UpdatedAt.Value.ToString("o") : null))
+                opt => opt.MapFrom(src => src.UpdatedAt != null ? src.UpdatedAt.Value.ToString("yyyy-MM-dd HH:mm:ss") : null))
             .ForMember(dest => dest.Rev,
                 opt => opt.MapFrom(src => src.Rev ?? 0))
             .ForMember(dest => dest.TotalHiddenPilesFound,

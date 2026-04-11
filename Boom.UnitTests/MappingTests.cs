@@ -66,15 +66,15 @@ public class MappingTests
         dto.Notification.Should().Be(player.Notification);
         dto.Email.Should().Be(player.Email);
         dto.Badge.Should().Be(player.Badge);
-        dto.LastLoginAt.Should().Be(player.LastLoginAt!.Value.ToString("o"));
+        dto.LastLoginAt.Should().Be(player.LastLoginAt!.Value.ToString("yyyy-MM-dd HH:mm:ss"));
         dto.CountryCode.Should().Be(player.CountryCode);
         dto.Timezone.Should().Be(player.Timezone);
         dto.TimezoneSecondsOffset.Should().Be(player.TimezoneSecondsOffset);
         dto.Rev.Should().Be(player.Rev!.Value);
         dto.Device.Should().Be(player.Device);
         dto.Ios.Should().Be(player.Ios);
-        dto.CreatedAt.Should().Be(player.CreatedAt!.Value.ToString("o"));
-        dto.UpdatedAt.Should().Be(player.UpdatedAt!.Value.ToString("o"));
+        dto.CreatedAt.Should().Be(player.CreatedAt!.Value.ToString("yyyy-MM-dd HH:mm:ss"));
+        dto.UpdatedAt.Should().Be(player.UpdatedAt!.Value.ToString("yyyy-MM-dd HH:mm:ss"));
         dto.TinyUrl.Should().Be(player.TinyUrl);
         dto.HeroStyle.Should().Be(player.HeroStyle);
         dto.EngineStyle.Should().Be(player.EngineStyle);
@@ -143,8 +143,8 @@ public class MappingTests
         dto.HeroStyle.Should().Be(standing.HeroStyle);
         dto.WheelStyle.Should().Be(standing.WheelStyle);
         dto.EngineStyle.Should().Be(standing.EngineStyle);
-        dto.CreatedAt.Should().Be(standing.CreatedAt!.Value.ToString("o"));
-        dto.UpdatedAt.Should().Be(standing.UpdatedAt!.Value.ToString("o"));
+        dto.CreatedAt.Should().Be(standing.CreatedAt!.Value.ToString("yyyy-MM-dd HH:mm:ss"));
+        dto.UpdatedAt.Should().Be(standing.UpdatedAt!.Value.ToString("yyyy-MM-dd HH:mm:ss"));
         dto.Rank.Should().Be(0);
         dto.IsSelf.Should().Be(false);
     }
@@ -162,8 +162,8 @@ public class MappingTests
         dto.EloGroup.Should().Be(tournament.EloGroup);
         dto.Cheaters.Should().Be(tournament.Cheaters);
         dto.Users.Should().Be(tournament.Standings.Count);
-        dto.CreatedAt.Should().Be(tournament.CreatedAt!.Value.ToString("o"));
-        dto.UpdatedAt.Should().Be(tournament.UpdatedAt!.Value.ToString("o"));
+        dto.CreatedAt.Should().Be(tournament.CreatedAt!.Value.ToString("yyyy-MM-dd HH:mm:ss"));
+        dto.UpdatedAt.Should().Be(tournament.UpdatedAt!.Value.ToString("yyyy-MM-dd HH:mm:ss"));
     }
 
     [Test]
