@@ -40,8 +40,8 @@ namespace Boom.UnitTests.Services
             var result = await _playerService.UpdatePlayer(dto);
 
             // Assert
-            _mockRepository.Verify(r => r.CreateAsync(It.IsAny<Player>()), Times.Once);
-            _mockRepository.Verify(r => r.UpdateAsync(It.IsAny<Player>()), Times.Never);
+            _mockRepository.Verify(r => r.Add(It.IsAny<Player>()), Times.Once);
+            _mockRepository.Verify(r => r.Update(It.IsAny<Player>()), Times.Never);
             player.SecretKey.Should().Be("secretkey");
             result.Should().BeSameAs(player);
         }
@@ -59,8 +59,8 @@ namespace Boom.UnitTests.Services
             var result = await _playerService.UpdatePlayer(dto);
 
             // Assert
-            _mockRepository.Verify(r => r.CreateAsync(It.IsAny<Player>()), Times.Never);
-            _mockRepository.Verify(r => r.UpdateAsync(existingPlayer), Times.Once);
+            _mockRepository.Verify(r => r.Add(It.IsAny<Player>()), Times.Never);
+            _mockRepository.Verify(r => r.Update(existingPlayer), Times.Once);
             result.Should().BeSameAs(existingPlayer);
             existingPlayer.SecretKey.Should().Be("persisted");
         }

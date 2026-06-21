@@ -24,7 +24,8 @@ public class PlayerService : IPlayerService
         // Create player
         var player = _mapper.Map<Player>(playerInfo);
         player.SecretKey = _encryptionService.GenerateSecretKey();
-        await _repository.CreateAsync(player);
+        _repository.Add(player);
+        await _repository.SaveAsync();
         return player;
     }
 
@@ -41,7 +42,8 @@ public class PlayerService : IPlayerService
         // Update existing player
         else
         {
-            await _repository.UpdateAsync(player);
+            _repository.Update(player);
+            await _repository.SaveAsync();
             return player;
         }
     }

@@ -64,94 +64,52 @@ public class TournamentService : ITournamentService
         }
 
         // Pick or create tournament
-        var tournament = tournamentGroup.Tournaments.Any()
+        var tournament = tournamentGroup.Tournaments.Count != 0
             ? tournamentGroup.Tournaments.First()
             : await CreateTournament(tournamentGroup.Id);
 
         // Check if player already has a standing
         var standing = tournament.Standings.FirstOrDefault(s => s.UserId == player.Id);
-        bool isNewStanding;
         if (standing != null)
         {
             if (standing.Time <= dto.Time)
                 return BuildJoinResponse(tournament, player); // existing time is faster or equal, no update needed
-            isNewStanding = false;
         }
         else
         {
             standing = new Standing();
-            isNewStanding = true;
         }
 
-        // Save ghost
-        var ghost = new Ghost { Data = await dto.GhostData.GetBytes() };
-        await _repository.CreateAsync(ghost);
-
-        // Update standing
-        standing.TournamentId = tournament.Id;
-        standing.UserId = player.Id;
-        standing.GhostId = ghost.Id;
-        standing.Time = dto.Time;
-        standing.HeroStyle = dto.HeroStyle;
-        standing.WheelStyle = dto.WheelStyle;
-        standing.EngineStyle = dto.EngineStyle;
-
-        await _repository.CreateAsync(standing);
-
-        if (isNewStanding)
+        // Replace ghost (delete old one if updating)
+        if (standing.Id != 0)
         {
+            var oldGhost = _repository.GetById<Ghost>(standing.GhostId);
+            if (oldGhost != null)
+                _repository.Remove(oldGhost);
+        }
+
+        var ghostData = await dto.GhostData.GetBytes();
+        ApplyJoinToStanding(standing, dto, tournament.Id, player.Id, ghostData);
+
+        // No existing standing, create new
+        if (standing.Id == 0)
+        {
+            _repository.Add(standing);
             standing.Player = player;
             tournament.Standings.Add(standing);
         }
+        // Update existing standing
+        else
+        {
+            _repository.Update(standing);
+        }
+
+        await _repository.SaveAsync();
 
         // TODO: discord broadcast
         return BuildJoinResponse(tournament, player);
     }
-
-    private JoinTournamentResponseDto BuildJoinResponse(Tournament tournament, Player player)
-    {
-        var sortedDtos = tournament.Standings
-            .OrderBy(s => s.Time)
-            .Select((s, index) =>
-            {
-                var dto = _mapper.Map<StandingDto>(s);
-                dto.Rank = index + 1;
-                dto.IsSelf = s.UserId == player.Id;
-                return dto;
-            })
-            .ToList();
-
-        // Prepend a copy of the #1 standing at rank 0
-        var standings = sortedDtos.ToList();
-        if (sortedDtos.Count > 0)
-        {
-            var first = sortedDtos[0];
-            standings.Insert(0, new StandingDto
-            {
-                Id = first.Id,
-                TournamentId = first.TournamentId,
-                UserId = first.UserId,
-                GhostId = first.GhostId,
-                Time = first.Time,
-                HeroStyle = first.HeroStyle,
-                WheelStyle = first.WheelStyle,
-                EngineStyle = first.EngineStyle,
-                CreatedAt = first.CreatedAt,
-                UpdatedAt = first.UpdatedAt,
-                BoomUser = first.BoomUser,
-                IsSelf = first.IsSelf,
-                Rank = 0
-            });
-        }
-
-        return new JoinTournamentResponseDto
-        {
-            Tournament = _mapper.Map<TournamentDto>(tournament),
-            Standings = standings,
-            Rank = sortedDtos.FirstOrDefault(s => s.IsSelf)?.Rank ?? 0
-        };
-    }
-
+    
     public async Task<TournamentGroup> CreateGroup(TimeSpan duration, LevelTarget? levelTarget = null)
     {
         // Pick a random level target if none provided
@@ -188,12 +146,72 @@ public class TournamentService : ITournamentService
         tournamentGroup.StartsAt =
             lastTournament != null ? RoundHour(lastTournament.EndsAt) : RoundHour(DateTime.UtcNow);
         tournamentGroup.EndsAt = tournamentGroup.StartsAt.Add(duration);
-        await _repository.CreateAsync(tournamentGroup);
+        _repository.Add(tournamentGroup);
+        await _repository.SaveAsync();
 
         return tournamentGroup;
     }
 
-    public async Task<Tournament> CreateTournament(long groupId, int eloGroup = 1, int cheaters = 0)
+    private static void ApplyJoinToStanding(Standing standing, JoinTournamentDto dto, long tournamentId, long userId, byte[] ghostData)
+    {
+        standing.Ghost = new Ghost { Data = ghostData };
+        standing.TournamentId = tournamentId;
+        standing.UserId = userId;
+        standing.Time = dto.Time;
+        standing.HeroStyle = dto.HeroStyle;
+        standing.WheelStyle = dto.WheelStyle;
+        standing.EngineStyle = dto.EngineStyle;
+    }
+
+    private JoinTournamentResponseDto BuildJoinResponse(Tournament tournament, Player player)
+    {
+        var sortedDtos = tournament.Standings
+            .OrderBy(s => s.Time)
+            .Select((s, index) =>
+            {
+                var dto = _mapper.Map<StandingDto>(s);
+                dto.Rank = index + 1;
+                dto.IsSelf = s.UserId == player.Id;
+                return dto;
+            })
+            .ToList();
+
+        var standings = sortedDtos.ToList();
+        if (sortedDtos.Count <= 0)
+            return new JoinTournamentResponseDto
+            {
+                Tournament = _mapper.Map<TournamentDto>(tournament),
+                Standings = standings,
+                Rank = sortedDtos.FirstOrDefault(s => s.IsSelf)?.Rank ?? 0
+            };
+        // Prepend a copy of the #1 standing at rank 0
+        var first = sortedDtos[0];
+        standings.Insert(0, new StandingDto
+        {
+            Id = first.Id,
+            TournamentId = first.TournamentId,
+            UserId = first.UserId,
+            GhostId = first.GhostId,
+            Time = first.Time,
+            HeroStyle = first.HeroStyle,
+            WheelStyle = first.WheelStyle,
+            EngineStyle = first.EngineStyle,
+            CreatedAt = first.CreatedAt,
+            UpdatedAt = first.UpdatedAt,
+            BoomUser = first.BoomUser,
+            IsSelf = first.IsSelf,
+            Rank = 0
+        });
+
+        return new JoinTournamentResponseDto
+        {
+            Tournament = _mapper.Map<TournamentDto>(tournament),
+            Standings = standings,
+            Rank = sortedDtos.FirstOrDefault(s => s.IsSelf)?.Rank ?? 0
+        };
+    }
+
+    private async Task<Tournament> CreateTournament(long groupId, int eloGroup = 1, int cheaters = 0)
     {
         var tournament = new Tournament
         {
@@ -203,7 +221,8 @@ public class TournamentService : ITournamentService
             Cheaters = cheaters
         };
 
-        await _repository.CreateAsync(tournament);
+        _repository.Add(tournament);
+        await _repository.SaveAsync();
 
         return tournament;
     }

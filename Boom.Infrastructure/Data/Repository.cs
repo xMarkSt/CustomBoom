@@ -1,4 +1,3 @@
-using System.Security.Claims;
 using Boom.Infrastructure.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,79 +12,54 @@ public class Repository<TContext> : IRepository where TContext : DbContext
         _dbContext = context;
     }
 
-    public async Task<int> CreateAsync<T>(T entity) where T : class, IEntity
+    public void Add<T>(T entity) where T : class, IEntity
     {
-        if (entity == null)
-        {
-            throw new ArgumentNullException("entity");
-        }
-        
+        ArgumentNullException.ThrowIfNull(entity);
         _dbContext.Add(entity);
-        
-        return await _dbContext.SaveChangesAsync();
     }
 
-    public async Task<IEnumerable<T>> CreateAsync<T>(IEnumerable<T> entity) where T : class, IEntity
+    public void AddRange<T>(IEnumerable<T> entities) where T : class, IEntity
     {
-        if (entity == null)
-        {
-            throw new ArgumentNullException("entity");
-        }
-
-        foreach(var e in entity)
-        {
-            _dbContext.Add<T>(e);
-        }
-
-        await _dbContext.SaveChangesAsync();
-        return entity;
+        ArgumentNullException.ThrowIfNull(entities);
+        _dbContext.AddRange(entities);
     }
 
-    public async Task<bool> RemoveAsync<TEntity>(TEntity entity) where TEntity : class, IEntity
+    public void Remove<TEntity>(TEntity entity) where TEntity : class, IEntity
     {
         ArgumentNullException.ThrowIfNull(entity);
-
-        _dbContext.Remove<TEntity>(entity);
-        await _dbContext.SaveChangesAsync();
-        return true;
+        _dbContext.Remove(entity);
     }
-        
-    public async Task<bool> RemoveRangeAsync<TEntity>(IEnumerable<TEntity> entity) where TEntity : class, IEntity
+
+    public void RemoveRange<TEntity>(IEnumerable<TEntity> entities) where TEntity : class, IEntity
+    {
+        ArgumentNullException.ThrowIfNull(entities);
+        _dbContext.RemoveRange(entities);
+    }
+
+    public void Update<TEntity>(TEntity entity) where TEntity : class, IEntity
     {
         ArgumentNullException.ThrowIfNull(entity);
+        _dbContext.Update(entity);
+    }
 
-        _dbContext.RemoveRange(entity);
+    public async Task SaveAsync()
+    {
         await _dbContext.SaveChangesAsync();
-        return true;
     }
 
     public IQueryable<TEntity> GetAll<TEntity>() where TEntity : class, IEntity
     {
         return _dbContext.Set<TEntity>();
     }
-        
+
     public TEntity? GetById<TEntity>(int id) where TEntity : class, IEntity
     {
         return _dbContext.Set<TEntity>().Find(id);
     }
-        
+
     public TEntity? GetById<TEntity>(long id) where TEntity : class, IEntity
     {
         return _dbContext.Set<TEntity>().Find(id);
-    }
-
-    public async Task<TEntity> UpdateAsync<TEntity>(TEntity entity) where TEntity : class, IEntity
-    {
-        ArgumentNullException.ThrowIfNull(entity);
-        if (entity.Id < 0)
-        {
-            throw new InvalidOperationException($"id of object of type {entity.GetType()} is not set.");
-        }
-
-        _dbContext.Update<TEntity>(entity);
-        await _dbContext.SaveChangesAsync();
-
-        return entity;
     }
 
     public void ClearChanges()
