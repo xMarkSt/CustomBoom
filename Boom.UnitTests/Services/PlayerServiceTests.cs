@@ -64,5 +64,23 @@ namespace Boom.UnitTests.Services
             result.Should().BeSameAs(existingPlayer);
             existingPlayer.SecretKey.Should().Be("persisted");
         }
+
+        [Test]
+        public async Task UpdatePlayer_PlayerExists_MapsFieldsFromDto()
+        {
+            // Arrange
+            var dto = new GetScheduleDto { UserUuid = Guid.NewGuid() };
+            var existingPlayer = new Player { Uuid = dto.UserUuid };
+            var players = new List<Player> { existingPlayer }.AsQueryable().BuildMock();
+            _mockRepository.Setup(r => r.GetAll<Player>()).Returns(players);
+
+            // Act
+            await _playerService.UpdatePlayer(dto);
+
+            // Assert: mapper is called with the existing player as destination so DTO fields are applied
+            _mockMapper.Verify(
+                m => m.Map(dto, existingPlayer, dto.GetType(), typeof(Player)),
+                Times.Once);
+        }
     }
 }

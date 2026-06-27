@@ -40,11 +40,9 @@ public class PlayerService : IPlayerService
         }
         
         // Update existing player
-        else
-        {
-            _repository.Update(player);
-            await _repository.SaveAsync();
-            return player;
-        }
+        _mapper.Map(playerInfo, player, playerInfo.GetType(), typeof(Player));
+        _repository.Update(player);
+        await _repository.SaveAsync();
+        return player;
     }
 }
