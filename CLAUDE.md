@@ -113,7 +113,7 @@ This is a rework of an existing Laravel/PHP project. The original lives at `C:\P
 - Same standings plist as `join`, but read-only (no score submission).
 
 **`ghost` endpoint:**
-- Accepts a tournament ID and returns the raw ghost binary for the best-ranked player (or a specified rank).
+- Accepts `tournament_uuid` + `opponent_uuid` and returns the raw ghost binary for that specific player.
 
 **`results` endpoint:**
 - Returns top 3 standings plus the requesting player's own standing.
