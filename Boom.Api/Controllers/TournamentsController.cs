@@ -64,6 +64,16 @@ public class TournamentsController : ControllerBase
     }
     
     [HttpPost]
+    [EncryptResponse]
+    public async Task<ActionResult<string>> Reload([FromForm] ReloadTournamentDto dto)
+    {
+        var player = await _playerService.UpdatePlayer(dto);
+        var result = await _tournamentService.Reload(dto, player);
+        if (result == null) return NotFound();
+        return Ok(result);
+    }
+
+    [HttpPost]
     public async Task<ActionResult<TournamentGroup>> Create(
         [FromQuery] int? durationHours,
         [FromQuery] int? durationMinutes)

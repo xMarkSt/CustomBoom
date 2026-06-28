@@ -9,5 +9,6 @@ public interface ITournamentService
 {
     Task<ScheduleDto> GetSchedule();
     Task<Boom.Common.DTOs.Response.JoinTournamentDto?> Join(JoinTournamentDto dto, Player player);
+    Task<Boom.Common.DTOs.Response.JoinTournamentDto?> Reload(ReloadTournamentDto dto, Player player);
     Task<TournamentGroup> CreateGroup(TimeSpan duration, LevelTarget? levelTarget = null);
 }

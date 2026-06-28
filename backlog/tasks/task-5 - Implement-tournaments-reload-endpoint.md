@@ -1,9 +1,10 @@
 ---
 id: TASK-5
 title: Implement tournaments/reload endpoint
-status: To Do
+status: Done
 assignee: []
 created_date: '2026-06-28 16:31'
+updated_date: '2026-06-28 16:49'
 labels: []
 dependencies: []
 ordinal: 5000
@@ -17,9 +18,9 @@ The reload endpoint re-fetches the current standings plist for a tournament with
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 POST /tournaments/reload accepts form fields: tournament_uuid, user_uuid, and player info fields (same as join)
-- [ ] #2 Updates player info (calls UpdatePlayer) before returning standings
-- [ ] #3 Returns the same standings plist structure as the join endpoint
-- [ ] #4 Response is encrypted via [EncryptResponse] filter
-- [ ] #5 Returns 404 if tournament not found
+- [x] #1 POST /tournaments/reload accepts form fields: tournament_uuid, user_uuid, and player info fields (same as join)
+- [x] #2 Updates player info (calls UpdatePlayer) before returning standings
+- [x] #3 Returns the same standings plist structure as the join endpoint
+- [x] #4 Response is encrypted via [EncryptResponse] filter
+- [x] #5 Returns 404 if tournament not found
 <!-- AC:END -->
