@@ -64,9 +64,19 @@ public class TournamentsController : ControllerBase
     }
     
     [HttpPost]
-    public async Task<ActionResult<TournamentGroup>> Create([FromQuery] int durationHours = 24)
+    public async Task<ActionResult<TournamentGroup>> Create(
+        [FromQuery] int? durationHours,
+        [FromQuery] int? durationMinutes)
     {
-        var duration = TimeSpan.FromHours(durationHours);
+        if (durationHours == null && durationMinutes == null)
+            return BadRequest("Provide either durationHours or durationMinutes.");
+
+        if (durationHours != null && durationMinutes != null)
+            return BadRequest("Provide either durationHours or durationMinutes, not both.");
+
+        var duration = durationHours != null
+            ? TimeSpan.FromHours(durationHours.Value)
+            : TimeSpan.FromMinutes(durationMinutes!.Value);
 
         var result = await _tournamentService.CreateGroup(duration);
 

@@ -96,7 +96,6 @@ public class TournamentService : ITournamentService
         {
             _repository.Add(standing);
             standing.Player = player;
-            tournament.Standings.Add(standing);
         }
         // Update existing standing
         else

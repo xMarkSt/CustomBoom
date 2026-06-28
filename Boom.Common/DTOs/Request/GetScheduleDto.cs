@@ -29,7 +29,7 @@ public class GetScheduleDto : IPlayerInfo
     [FromForm(Name = "level")]
     public int? Level { get; set; }
     
-    [FromForm(Name = "max_group_id_unlock")]
+    [FromForm(Name = "max_group_id_unlocked")]
     public string? MaxGroupIdUnlocked { get; set; }
     
     [FromForm(Name = "nickname")]
