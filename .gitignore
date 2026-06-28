@@ -92,3 +92,6 @@ fabric.properties
 .idea/.idea.Boom/.idea/material_theme_project_new.xml
 
 # End of https://www.toptal.com/developers/gitignore/api/dotnetcore,rider
+
+# Local dev secrets
+appsettings.Development.json

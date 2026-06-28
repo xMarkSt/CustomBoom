@@ -109,6 +109,19 @@ public class TournamentService : ITournamentService
         return BuildJoinResponse(tournament, player);
     }
     
+    public async Task<JoinTournamentResponseDto?> Reload(ReloadTournamentDto dto, Player player)
+    {
+        var tournament = await _repository.GetAll<Tournament>()
+            .Include(t => t.Standings)
+            .ThenInclude(s => s.Player)
+            .FirstOrDefaultAsync(t => t.Uuid == dto.TournamentUuid);
+
+        if (tournament == null)
+            return null;
+
+        return BuildJoinResponse(tournament, player);
+    }
+
     public async Task<TournamentGroup> CreateGroup(TimeSpan duration, LevelTarget? levelTarget = null)
     {
         // Pick a random level target if none provided

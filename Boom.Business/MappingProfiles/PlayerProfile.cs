@@ -3,6 +3,7 @@ using Boom.Common.DTOs.Request;
 using Boom.Common.DTOs.Response;
 using Boom.Infrastructure.Data.Entities;
 using JoinTournamentRequestDto = Boom.Common.DTOs.Request.JoinTournamentDto;
+using ReloadTournamentRequestDto = Boom.Common.DTOs.Request.ReloadTournamentDto;
 
 namespace Boom.Business.MappingProfiles;
 
@@ -14,6 +15,32 @@ public class PlayerProfile : Profile
             .ForMember(dest => dest.Uuid, opt => opt.MapFrom(src => src.UserUuid));
 
         CreateMap<JoinTournamentRequestDto, Player>()
+            .ForMember(dest => dest.Id, opt => opt.Ignore())
+            .ForMember(dest => dest.Uuid, opt => opt.Ignore())
+            .ForMember(dest => dest.SecretKey, opt => opt.Ignore())
+            .ForMember(dest => dest.Badge,
+                opt => { opt.Condition(src => src.Badge != null); opt.MapFrom(src => src.Badge!.Value); })
+            .ForMember(dest => dest.CountryCode,
+                opt => { opt.Condition(src => src.CountryCode != null); opt.MapFrom(src => src.CountryCode!); })
+            .ForMember(dest => dest.Fullname,
+                opt => { opt.Condition(src => src.FullName != null); opt.MapFrom(src => src.FullName); })
+            .ForMember(dest => dest.MaxGroupIdUnlocked,
+                opt => { opt.Condition(src => src.MaxGroupIdUnlocked != null); opt.MapFrom(src => src.MaxGroupIdUnlocked!); })
+            .ForMember(dest => dest.Notification,
+                opt => { opt.Condition(src => src.Notification != null); opt.MapFrom(src => src.Notification!); })
+            .ForMember(dest => dest.Timezone,
+                opt => { opt.Condition(src => src.Timezone != null); opt.MapFrom(src => src.Timezone!); })
+            .ForMember(dest => dest.TimezoneSecondsOffset,
+                opt => { opt.Condition(src => src.TimezoneSecondsOffset != null); opt.MapFrom(src => src.TimezoneSecondsOffset!.Value); })
+            .ForMember(dest => dest.TotalDistance,
+                opt => { opt.Condition(src => src.TotalDistance != null); opt.MapFrom(src => src.TotalDistance!.Value); })
+            .ForMember(dest => dest.TotalEarnedMedals,
+                opt => { opt.Condition(src => src.TotalEarnedMedals != null); opt.MapFrom(src => src.TotalEarnedMedals!.Value); })
+            .ForMember(dest => dest.TotalEarnedSuperstars,
+                opt => { opt.Condition(src => src.TotalEarnedSuperstars != null); opt.MapFrom(src => src.TotalEarnedSuperstars!.Value); })
+            ;
+
+        CreateMap<ReloadTournamentRequestDto, Player>()
             .ForMember(dest => dest.Id, opt => opt.Ignore())
             .ForMember(dest => dest.Uuid, opt => opt.Ignore())
             .ForMember(dest => dest.SecretKey, opt => opt.Ignore())
