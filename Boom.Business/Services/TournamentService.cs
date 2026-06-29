@@ -122,6 +122,27 @@ public class TournamentService : ITournamentService
         return BuildJoinResponse(tournament, player);
     }
 
+    /// <summary>
+    /// Get the raw ghost replay binary for a specific opponent within a tournament.
+    /// </summary>
+    /// <param name="dto">Tournament uuid and opponent uuid.</param>
+    /// <returns>
+    /// The stored ghost bytes (gzip-compressed, served as-is to match the original PHP behaviour),
+    /// or null if the tournament, the opponent's standing, or its ghost is not found.
+    /// </returns>
+    public async Task<byte[]?> GetGhost(GhostTournamentDto dto)
+    {
+        var standing = await _repository.GetAll<Standing>()
+            .Include(s => s.Ghost)
+            .Include(s => s.Tournament)
+            .Include(s => s.Player)
+            .FirstOrDefaultAsync(s =>
+                s.Tournament.Uuid == dto.TournamentUuid &&
+                s.Player.Uuid == dto.OpponentUuid);
+
+        return standing?.Ghost?.Data;
+    }
+
     public async Task<TournamentGroup> CreateGroup(TimeSpan duration, LevelTarget? levelTarget = null)
     {
         // Pick a random level target if none provided
