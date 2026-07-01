@@ -1,3 +1,4 @@
+using System.IO.Compression;
 using AutoMapper;
 using Boom.Business.Services;
 using Boom.Common.DTOs.Request;
@@ -30,19 +31,30 @@ namespace Boom.UnitTests.Services
                 .Returns(standings.AsQueryable().BuildMock());
         }
 
-        [Test]
-        public async Task GetGhost_OpponentStandingExists_ReturnsGhostDataAsIs()
+        private static byte[] Gzip(byte[] data)
         {
-            // Arrange
+            using var output = new MemoryStream();
+            using (var gzip = new GZipStream(output, CompressionMode.Compress))
+            {
+                gzip.Write(data, 0, data.Length);
+            }
+            return output.ToArray();
+        }
+
+        [Test]
+        public async Task GetGhost_OpponentStandingExists_ReturnsDecompressedGhost()
+        {
+            // Arrange: ghosts are stored gzip-compressed (as uploaded by the client)
             var tournamentUuid = Guid.NewGuid();
             var opponentUuid = Guid.NewGuid();
-            var ghostBytes = new byte[] { 1, 2, 3, 4, 5 };
+            var replay = new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+            var storedBytes = Gzip(replay);
 
             var standing = new Standing
             {
                 Tournament = new Tournament { Uuid = tournamentUuid },
                 Player = new Player { Uuid = opponentUuid },
-                Ghost = new Ghost { Data = ghostBytes }
+                Ghost = new Ghost { Data = storedBytes }
             };
             SetupStandings(new[] { standing });
 
@@ -51,8 +63,33 @@ namespace Boom.UnitTests.Services
             // Act
             var result = await _tournamentService.GetGhost(dto);
 
-            // Assert: bytes returned verbatim (no decompression) to match the original PHP behaviour
-            result.Should().BeSameAs(ghostBytes);
+            // Assert: the decompressed replay is returned, matching PHP Ghost::getDataAttribute (gzdecode)
+            result.Should().Equal(replay);
+        }
+
+        [Test]
+        public async Task GetGhost_DataNotGzip_ReturnsAsIs()
+        {
+            // Legacy/uncompressed rows must not crash the download.
+            var tournamentUuid = Guid.NewGuid();
+            var opponentUuid = Guid.NewGuid();
+            var rawBytes = new byte[] { 1, 2, 3, 4, 5 }; // not gzip-framed
+
+            var standing = new Standing
+            {
+                Tournament = new Tournament { Uuid = tournamentUuid },
+                Player = new Player { Uuid = opponentUuid },
+                Ghost = new Ghost { Data = rawBytes }
+            };
+            SetupStandings(new[] { standing });
+
+            var dto = new GhostTournamentDto { TournamentUuid = tournamentUuid, OpponentUuid = opponentUuid };
+
+            // Act
+            var result = await _tournamentService.GetGhost(dto);
+
+            // Assert
+            result.Should().Equal(rawBytes);
         }
 
         [Test]
