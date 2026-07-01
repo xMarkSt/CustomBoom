@@ -27,7 +27,7 @@ public class Player : EntityBase
 
     [Column("notification")]
     [StringLength(20)]
-    public string Notification { get; set; } = null!;
+    public string Notification { get; set; } = string.Empty;
 
     [Column("email")]
     [StringLength(20)]
@@ -41,11 +41,11 @@ public class Player : EntityBase
 
     [Column("country_code")]
     [StringLength(3)]
-    public string CountryCode { get; set; } = null!;
+    public string CountryCode { get; set; } = string.Empty;
 
     [Column("timezone")]
     [StringLength(50)]
-    public string Timezone { get; set; } = null!;
+    public string Timezone { get; set; } = string.Empty;
 
     [Column("timezone_seconds_offset")]
     public int TimezoneSecondsOffset { get; set; }
@@ -67,15 +67,15 @@ public class Player : EntityBase
 
     [Column("hero_style")]
     [StringLength(20)]
-    public string HeroStyle { get; set; } = null!;
+    public string HeroStyle { get; set; } = string.Empty;
 
     [Column("engine_style")]
     [StringLength(20)]
-    public string EngineStyle { get; set; } = null!;
+    public string EngineStyle { get; set; } = string.Empty;
 
     [Column("wheel_style")]
     [StringLength(20)]
-    public string WheelStyle { get; set; } = null!;
+    public string WheelStyle { get; set; } = string.Empty;
 
     [Column("total_hidden_piles_found")] 
     public int? TotalHiddenPilesFound { get; set; } = 0;
@@ -109,7 +109,7 @@ public class Player : EntityBase
 
     [Column("max_group_id_unlocked")]
     [StringLength(50)]
-    public string MaxGroupIdUnlocked { get; set; } = null!;
+    public string MaxGroupIdUnlocked { get; set; } = string.Empty;
 
     [Column("secret_key")]
     [StringLength(25)]

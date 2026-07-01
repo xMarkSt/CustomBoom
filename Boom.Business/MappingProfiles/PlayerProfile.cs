@@ -12,7 +12,23 @@ public class PlayerProfile : Profile
     public PlayerProfile()
     {
         CreateMap<GetScheduleDto, Player>()
-            .ForMember(dest => dest.Uuid, opt => opt.MapFrom(src => src.UserUuid));
+            .ForMember(dest => dest.Uuid, opt => opt.MapFrom(src => src.UserUuid))
+            // Guard the NOT NULL string columns so an omitted field does not overwrite
+            // the default (on create) or the persisted value (on update) with null.
+            .ForMember(dest => dest.CountryCode,
+                opt => { opt.Condition(src => src.CountryCode != null); opt.MapFrom(src => src.CountryCode!); })
+            .ForMember(dest => dest.Notification,
+                opt => { opt.Condition(src => src.Notification != null); opt.MapFrom(src => src.Notification!); })
+            .ForMember(dest => dest.Timezone,
+                opt => { opt.Condition(src => src.Timezone != null); opt.MapFrom(src => src.Timezone!); })
+            .ForMember(dest => dest.HeroStyle,
+                opt => { opt.Condition(src => src.HeroStyle != null); opt.MapFrom(src => src.HeroStyle!); })
+            .ForMember(dest => dest.EngineStyle,
+                opt => { opt.Condition(src => src.EngineStyle != null); opt.MapFrom(src => src.EngineStyle!); })
+            .ForMember(dest => dest.WheelStyle,
+                opt => { opt.Condition(src => src.WheelStyle != null); opt.MapFrom(src => src.WheelStyle!); })
+            .ForMember(dest => dest.MaxGroupIdUnlocked,
+                opt => { opt.Condition(src => src.MaxGroupIdUnlocked != null); opt.MapFrom(src => src.MaxGroupIdUnlocked!); });
 
         CreateMap<JoinTournamentRequestDto, Player>()
             .ForMember(dest => dest.Id, opt => opt.Ignore())
@@ -50,6 +66,12 @@ public class PlayerProfile : Profile
                 opt => { opt.Condition(src => src.CountryCode != null); opt.MapFrom(src => src.CountryCode!); })
             .ForMember(dest => dest.Fullname,
                 opt => { opt.Condition(src => src.FullName != null); opt.MapFrom(src => src.FullName); })
+            .ForMember(dest => dest.HeroStyle,
+                opt => { opt.Condition(src => src.HeroStyle != null); opt.MapFrom(src => src.HeroStyle!); })
+            .ForMember(dest => dest.EngineStyle,
+                opt => { opt.Condition(src => src.EngineStyle != null); opt.MapFrom(src => src.EngineStyle!); })
+            .ForMember(dest => dest.WheelStyle,
+                opt => { opt.Condition(src => src.WheelStyle != null); opt.MapFrom(src => src.WheelStyle!); })
             .ForMember(dest => dest.MaxGroupIdUnlocked,
                 opt => { opt.Condition(src => src.MaxGroupIdUnlocked != null); opt.MapFrom(src => src.MaxGroupIdUnlocked!); })
             .ForMember(dest => dest.Notification,
