@@ -1,5 +1,6 @@
 using AutoMapper;
 using Boom.Business.MappingProfiles;
+using Boom.Common.DTOs.Request;
 using Boom.Common.DTOs.Response;
 using Boom.Infrastructure.Data.Entities;
 using FluentAssertions;
@@ -48,6 +49,46 @@ public class MappingTests
         mapped.TotalEarnedSuperstars.Should().Be(testData.TotalEarnedSuperstars);
         mapped.Uuid.Should().Be(testData.UserUuid);
         mapped.WheelStyle.Should().Be(testData.WheelStyle);
+    }
+
+    [Test]
+    public void Test_GetScheduleDto_Player_Mapping_OmittedNotNullFields_DefaultToEmpty()
+    {
+        // Client omits the optional string fields (e.g. a minimal first request).
+        // The NOT NULL columns must map to non-null values so the INSERT does not fail.
+        var testData = new GetScheduleDto { UserUuid = Guid.NewGuid() };
+
+        var mapped = _mapper.Map<Player>(testData);
+
+        mapped.Uuid.Should().Be(testData.UserUuid);
+        mapped.CountryCode.Should().NotBeNull();
+        mapped.Notification.Should().NotBeNull();
+        mapped.Timezone.Should().NotBeNull();
+        mapped.HeroStyle.Should().NotBeNull();
+        mapped.EngineStyle.Should().NotBeNull();
+        mapped.WheelStyle.Should().NotBeNull();
+        mapped.MaxGroupIdUnlocked.Should().NotBeNull();
+    }
+
+    [Test]
+    public void Test_ReloadTournamentDto_Player_Mapping_OmittedStyleFields_DefaultToEmpty()
+    {
+        // Reload also creates a player if one does not exist yet; its style fields are nullable.
+        var testData = new ReloadTournamentDto
+        {
+            UserUuid = Guid.NewGuid(),
+            TournamentUuid = Guid.NewGuid()
+        };
+
+        var mapped = _mapper.Map<Player>(testData);
+
+        mapped.CountryCode.Should().NotBeNull();
+        mapped.Notification.Should().NotBeNull();
+        mapped.Timezone.Should().NotBeNull();
+        mapped.HeroStyle.Should().NotBeNull();
+        mapped.EngineStyle.Should().NotBeNull();
+        mapped.WheelStyle.Should().NotBeNull();
+        mapped.MaxGroupIdUnlocked.Should().NotBeNull();
     }
 
     [Test]
