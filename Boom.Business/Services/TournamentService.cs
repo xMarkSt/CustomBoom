@@ -1,3 +1,4 @@
+using System.IO.Compression;
 using AutoMapper;
 using Boom.Common.DTOs.Request;
 using Boom.Common.DTOs.Response;
@@ -120,6 +121,46 @@ public class TournamentService : ITournamentService
             return null;
 
         return BuildJoinResponse(tournament, player);
+    }
+
+    /// <summary>
+    /// Get the ghost replay binary for a specific opponent within a tournament.
+    /// </summary>
+    /// <param name="dto">Tournament uuid and opponent uuid.</param>
+    /// <returns>
+    /// The gzip-decompressed ghost binary (the client stores it compressed and expects the
+    /// decompressed replay back, matching the original PHP Ghost::getDataAttribute accessor),
+    /// or null if the tournament, the opponent's standing, or its ghost is not found.
+    /// </returns>
+    public async Task<byte[]?> GetGhost(GhostTournamentDto dto)
+    {
+        var standing = await _repository.GetAll<Standing>()
+            .Include(s => s.Ghost)
+            .Include(s => s.Tournament)
+            .Include(s => s.Player)
+            .FirstOrDefaultAsync(s =>
+                s.Tournament.Uuid == dto.TournamentUuid &&
+                s.Player.Uuid == dto.OpponentUuid);
+
+        var data = standing?.Ghost?.Data;
+        return data == null ? null : GzipDecompress(data);
+    }
+
+    /// <summary>
+    /// Gzip-decompress the stored ghost blob. If the data is not gzip-framed it is returned
+    /// unchanged, so legacy/uncompressed rows do not crash the download.
+    /// </summary>
+    private static byte[] GzipDecompress(byte[] data)
+    {
+        // gzip magic bytes: 0x1f 0x8b. Anything else is not a gzip stream.
+        if (data.Length < 2 || data[0] != 0x1f || data[1] != 0x8b)
+            return data;
+
+        using var source = new MemoryStream(data);
+        using var gzip = new GZipStream(source, CompressionMode.Decompress);
+        using var output = new MemoryStream();
+        gzip.CopyTo(output);
+        return output.ToArray();
     }
 
     public async Task<TournamentGroup> CreateGroup(TimeSpan duration, LevelTarget? levelTarget = null)
