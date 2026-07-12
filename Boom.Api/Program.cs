@@ -25,8 +25,9 @@ builder.Services.AddScoped<IPlayerService, PlayerService>();
 builder.Services.AddSingleton<IPlistSerializationService, PlistSerializationService>();
 builder.Services.AddSingleton<IEncryptionService, EncryptionService>();
 builder.Services.AddScoped<EncryptResponseFilter>();
-builder.Services.AddAutoMapper(typeof(TournamentGroupProfile));
-
+builder.Services.AddAutoMapper(
+    cfg => cfg.LicenseKey = builder.Configuration["AutoMapper:LicenseKey"],
+    typeof(TournamentGroupProfile).Assembly);
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
