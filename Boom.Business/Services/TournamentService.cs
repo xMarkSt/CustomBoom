@@ -163,6 +163,60 @@ public class TournamentService : ITournamentService
         return output.ToArray();
     }
 
+    /// <summary>
+    /// Player updates their score/ghost mid-tournament. The time, styles, and ghost all belong to
+    /// a single run (the styles are encoded in the ghost header), so they are overwritten together
+    /// only when the new time is strictly better; equal or slower times leave the standing
+    /// untouched. Unlike Join, it never creates a standing — the player must already be in the
+    /// tournament.
+    /// </summary>
+    /// <returns>The tournament result with standings and player rank. Null if tournament or standing not found.</returns>
+    public async Task<JoinTournamentResponseDto?> Update(UpdateTournamentDto dto, Player player)
+    {
+        var tournament = await _repository.GetAll<Tournament>()
+            .Include(t => t.Standings)
+            .ThenInclude(s => s.Player)
+            .FirstOrDefaultAsync(t => t.Uuid == dto.TournamentUuid);
+
+        if (tournament == null)
+            return null;
+
+        // Find the player's existing standing; update never creates one.
+        var standing = tournament.Standings.FirstOrDefault(s => s.UserId == player.Id);
+        if (standing == null)
+            return null;
+
+        // Only overwrite when the new time is strictly better; equal or slower times leave the
+        // run (time + styles + ghost) untouched so the ghost never diverges from its recorded time.
+        if (dto.Time >= standing.Time)
+            return BuildJoinResponse(tournament, player);
+
+        // Replace ghost (delete old one).
+        var oldGhost = _repository.GetById<Ghost>(standing.GhostId);
+        if (oldGhost != null)
+            _repository.Remove(oldGhost);
+
+        // Overwrite the whole run together (styles are part of the ghost header).
+        var ghostData = await dto.GhostData.GetBytes();
+        standing.Ghost = new Ghost { Data = ghostData };
+        standing.Time = dto.Time;
+        standing.HeroStyle = dto.HeroStyle;
+        standing.WheelStyle = dto.WheelStyle;
+        standing.EngineStyle = dto.EngineStyle;
+
+        _repository.Update(standing);
+        await _repository.SaveAsync();
+
+        // Player now holds rank #1?
+        var fastest = tournament.Standings.OrderBy(s => s.Time).FirstOrDefault();
+        if (fastest != null && fastest.UserId == player.Id)
+        {
+            // TODO: discord broadcast (rank #1)
+        }
+
+        return BuildJoinResponse(tournament, player);
+    }
+
     public async Task<TournamentGroup> CreateGroup(TimeSpan duration, LevelTarget? levelTarget = null)
     {
         // Pick a random level target if none provided
