@@ -15,13 +15,10 @@ public class MappingTests
     [SetUp]
     public void SetUp()
     {
-        var configuration = new MapperConfiguration(cfg =>
-        {
-            cfg.AddProfile(new PlayerProfile());
-            cfg.AddProfile(new StandingProfile());
-            cfg.AddProfile(new TournamentProfile());
-        });
-        _mapper = new Mapper(configuration);
+        _mapper = TestMapperFactory.Create(
+            new PlayerProfile(),
+            new StandingProfile(),
+            new TournamentProfile());
     }
 
     [Test]

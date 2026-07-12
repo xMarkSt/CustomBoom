@@ -79,9 +79,7 @@ public class UnitTest1
             .Setup(r => r.GetAll<TournamentGroup>())
             .Returns(GetTestData().BuildMock);
         
-        var profile = new TournamentGroupProfile();
-        var configuration = new MapperConfiguration(cfg => cfg.AddProfile(profile));
-        var mapper = new Mapper(configuration);
+        var mapper = TestMapperFactory.Create(new TournamentGroupProfile());
 
         // Act
         var service = new TournamentService(mockRepo.Object, mapper);
