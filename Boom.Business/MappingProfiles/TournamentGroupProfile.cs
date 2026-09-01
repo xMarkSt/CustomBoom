@@ -2,6 +2,7 @@ using System.Text.Json;
 using AutoMapper;
 using Boom.Common.DTOs;
 using Boom.Common.DTOs.Response;
+using Boom.Common.Enums;
 using Boom.Infrastructure.Data.Entities;
 
 namespace Boom.Business.MappingProfiles;
@@ -48,7 +49,7 @@ public class TournamentGroupProfile : Profile
 
     private static string GetOnlineTarget(LevelTarget levelTarget)
     {
-        if (levelTarget.Target.Type == "Fastest time")
+        if (levelTarget.TargetId == (long)TargetType.FastestTime)
         {
             return string.Empty;
         }
