@@ -1,4 +1,5 @@
 ﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=7020124F_002D9FFC_002D4AC3_002D8F3D_002DAAB8E0240759_002Ff_003ADebugger_002Ecs_002Fl_003A_002E_002E_003F_002E_002E_003F_002E_002E_003FUsers_003Fmarks_003FAppData_003FRoaming_003FJetBrains_003FRider2026_002E2_003Fresharper_002Dhost_003FSourcesCache_003F5af9fc9e4e9656f37613efe36625f832168e8333f86d484aaca47099ae6238_003FDebugger_002Ecs/@EntryIndexedValue">ForceIncluded</s:String>
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=7020124F_002D9FFC_002D4AC3_002D8F3D_002DAAB8E0240759_002Ff_003AExceptionDispatchInfo_002Ecs_002Fl_003AC_0021_003FUsers_003Fmarks_003FAppData_003FRoaming_003FJetBrains_003FRider2025_002E1_003Fresharper_002Dhost_003FSourcesCache_003Fbd1d5c50194fea68ff3559c160230b0ab50f5acf4ce3061bffd6d62958e2182_003FExceptionDispatchInfo_002Ecs/@EntryIndexedValue">ForceIncluded</s:String>
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=7020124F_002D9FFC_002D4AC3_002D8F3D_002DAAB8E0240759_002Ff_003AExceptionDispatchInfo_002Ecs_002Fl_003A_002E_002E_003F_002E_002E_003F_002E_002E_003FUsers_003Fmarks_003FAppData_003FRoaming_003FJetBrains_003FRider2025_002E2_003Fresharper_002Dhost_003FSourcesCache_003Fbd1d5c50194fea68ff3559c160230b0ab50f5acf4ce3061bffd6d62958e2182_003FExceptionDispatchInfo_002Ecs/@EntryIndexedValue">ForceIncluded</s:String>
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=7020124F_002D9FFC_002D4AC3_002D8F3D_002DAAB8E0240759_002Ff_003AExceptionDispatchInfo_002Ecs_002Fl_003A_002E_002E_003F_002E_002E_003F_002E_002E_003FUsers_003Fmstam_003FAppData_003FRoaming_003FJetBrains_003FRider2024_002E3_003Fresharper_002Dhost_003FSourcesCache_003Fbd1d5c50194fea68ff3559c160230b0ab50f5acf4ce3061bffd6d62958e2182_003FExceptionDispatchInfo_002Ecs/@EntryIndexedValue">ForceIncluded</s:String>
@@ -12,13 +13,6 @@
 	
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=96916d18_002D00c8_002D4e3d_002Db76f_002D7e51699039b7/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="TestScheduleDto" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
   &lt;TestAncestor&gt;&#xD;
-    &lt;TestId&gt;NUnit3x::9A760467-408D-4250-8ABC-7353FC4EEB51::net8.0::Boom.UnitTests.UnitTest1&lt;/TestId&gt;&#xD;
-    &lt;TestId&gt;NUnit3x::9A760467-408D-4250-8ABC-7353FC4EEB51::net8.0::Boom.UnitTests.PlistSerializationServiceTests.TestSerialization&lt;/TestId&gt;&#xD;
-    &lt;TestId&gt;NUnit3x::9A760467-408D-4250-8ABC-7353FC4EEB51::net8.0::Boom.UnitTests.MappingTests.Test_GetScheduleDto_Player_Mapping&lt;/TestId&gt;&#xD;
-    &lt;TestId&gt;NUnit3x::9A760467-408D-4250-8ABC-7353FC4EEB51::net8.0::Boom.UnitTests.Services.PlayerServiceTests&lt;/TestId&gt;&#xD;
-    &lt;TestId&gt;NUnit3x::9A760467-408D-4250-8ABC-7353FC4EEB51::net8.0::Boom.UnitTests.Services.EncryptionServiceTests.GetDecryptionKey_ReturnsValidDecryptionKey&lt;/TestId&gt;&#xD;
-    &lt;TestId&gt;NUnit3x::9A760467-408D-4250-8ABC-7353FC4EEB51::net8.0::Boom.UnitTests.Services.EncryptionServiceTests&lt;/TestId&gt;&#xD;
-    &lt;TestId&gt;NUnit3x::9A760467-408D-4250-8ABC-7353FC4EEB51::net8.0::Boom.UnitTests.Services.PlistSerializationServiceTests.SerializeToNSDictionary_IncludesSecretKey_WhenPresent&lt;/TestId&gt;&#xD;
-    &lt;TestId&gt;NUnit3x::9A760467-408D-4250-8ABC-7353FC4EEB51::net8.0::Boom.UnitTests.MappingTests&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::9A760467-408D-4250-8ABC-7353FC4EEB51::net10.0::Boom.UnitTests.Services.TournamentServiceJoinTests&lt;/TestId&gt;&#xD;
   &lt;/TestAncestor&gt;&#xD;
 &lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>

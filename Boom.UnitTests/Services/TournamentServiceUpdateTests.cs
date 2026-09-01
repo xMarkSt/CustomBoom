@@ -4,10 +4,10 @@ using Boom.Common.DTOs.Response;
 using Boom.Infrastructure.Data;
 using Boom.Infrastructure.Data.Entities;
 using FluentAssertions;
-using Microsoft.AspNetCore.Http;
 using MockQueryable;
 using Moq;
 using UpdateTournamentDto = Boom.Common.DTOs.Request.UpdateTournamentDto;
+using static Boom.UnitTests.Services.TournamentTestFixtures;
 
 namespace Boom.UnitTests.Services;
 
@@ -200,27 +200,6 @@ public class TournamentServiceUpdateTests
         _mockRepository.Setup(r => r.GetAll<Tournament>())
             .Returns(new List<Tournament> { tournament }.AsQueryable().BuildMock());
 
-    private static Player Player(long id) => new() { Id = id, Uuid = Guid.NewGuid() };
-
-    private static Tournament Tournament(Guid uuid, params Standing[] standings) => new()
-    {
-        Id = 5,
-        Uuid = uuid,
-        Standings = standings.ToList()
-    };
-
-    private static Standing Standing(long id, long userId, int time, long ghostId) => new()
-    {
-        Id = id,
-        UserId = userId,
-        Time = time,
-        GhostId = ghostId,
-        HeroStyle = "old",
-        WheelStyle = "old",
-        EngineStyle = "old",
-        Player = new Player { Id = userId, Uuid = Guid.NewGuid(), Nickname = $"P{userId}" }
-    };
-
     private static UpdateTournamentDto Dto(
         Guid tournamentUuid, int time, byte[]? ghost = null,
         string hero = "h", string engine = "e", string wheel = "w") => new()
@@ -233,16 +212,4 @@ public class TournamentServiceUpdateTests
         WheelStyle = wheel,
         GhostData = GhostFile(ghost ?? new byte[] { 1 })
     };
-
-    private static IFormFile GhostFile(byte[] data)
-    {
-        var mock = new Mock<IFormFile>();
-        mock.Setup(f => f.CopyToAsync(It.IsAny<Stream>(), It.IsAny<CancellationToken>()))
-            .Returns((Stream target, CancellationToken _) =>
-            {
-                target.Write(data, 0, data.Length);
-                return Task.CompletedTask;
-            });
-        return mock.Object;
-    }
 }
