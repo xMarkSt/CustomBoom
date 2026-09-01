@@ -22,10 +22,11 @@ public class MappingTests
             new TournamentGroupProfile());
     }
 
-    private static LevelTarget OnlineLevelTarget(string targetType, int? targetAmount, string? filePath) =>
+    private static LevelTarget OnlineLevelTarget(TargetType targetType, string targetTypeText, int? targetAmount, string? filePath) =>
         new()
         {
             Id = 3,
+            TargetId = (long)targetType,
             TargetAmount = targetAmount,
             Order = 1,
             Level = new Level
@@ -39,7 +40,7 @@ public class MappingTests
                 Theme = new Theme { Id = 1, Name = "Frozen Hills" },
                 Background = new Theme { Id = 2, Name = "North", BgName = "NorthBG.plist" }
             },
-            Target = new Target { Id = 1, Type = targetType }
+            Target = new Target { Id = (long)targetType, Type = targetTypeText }
         };
 
     [Test]
@@ -228,7 +229,9 @@ public class MappingTests
     [Test]
     public void Test_LevelTarget_LevelTargetDto_Mapping_OnlineFastestTime_TargetIsEmpty()
     {
-        var levelTarget = OnlineLevelTarget("Fastest time", 10, "levels/waterslide.plhs");
+        // Type text is deliberately not "Fastest time" - the mapping keys off TargetId, not
+        // the renameable display text, so this must still resolve to the empty/no-goal case.
+        var levelTarget = OnlineLevelTarget(TargetType.FastestTime, "Speedrun", 10, "levels/waterslide.plhs");
 
         var dto = _mapper.Map<LevelTargetDto>(levelTarget);
 
@@ -238,7 +241,7 @@ public class MappingTests
     [Test]
     public void Test_LevelTarget_LevelTargetDto_Mapping_OnlineWithAmount_TargetIsJson()
     {
-        var levelTarget = OnlineLevelTarget("Pickups", 3, "levels/waterslide.plhs");
+        var levelTarget = OnlineLevelTarget(TargetType.Pickups, "Pickups", 3, "levels/waterslide.plhs");
 
         var dto = _mapper.Map<LevelTargetDto>(levelTarget);
 
@@ -248,7 +251,7 @@ public class MappingTests
     [Test]
     public void Test_LevelTarget_LevelTargetDto_Mapping_OnlineWithoutAmount_TargetOmitsAmountKey()
     {
-        var levelTarget = OnlineLevelTarget("All bombs", null, "levels/waterslide.plhs");
+        var levelTarget = OnlineLevelTarget(TargetType.AllBombs, "All bombs", null, "levels/waterslide.plhs");
 
         var dto = _mapper.Map<LevelTargetDto>(levelTarget);
 
@@ -258,7 +261,7 @@ public class MappingTests
     [Test]
     public void Test_LevelTarget_LevelTargetDto_Mapping_OnlineWithFilePath_UrlUsesStoragePath()
     {
-        var levelTarget = OnlineLevelTarget("Pickups", 3, "levels/waterslide.plhs");
+        var levelTarget = OnlineLevelTarget(TargetType.Pickups, "Pickups", 3, "levels/waterslide.plhs");
 
         var dto = _mapper.Map<LevelTargetDto>(levelTarget);
 
@@ -268,7 +271,7 @@ public class MappingTests
     [Test]
     public void Test_LevelTarget_LevelTargetDto_Mapping_OnlineWithoutFilePath_UrlUsesFallbackPath()
     {
-        var levelTarget = OnlineLevelTarget("Pickups", 3, null);
+        var levelTarget = OnlineLevelTarget(TargetType.Pickups, "Pickups", 3, null);
 
         var dto = _mapper.Map<LevelTargetDto>(levelTarget);
 
@@ -278,7 +281,7 @@ public class MappingTests
     [Test]
     public void Test_LevelTarget_LevelTargetDto_Mapping_Offline_TargetAndUrlAreEmpty()
     {
-        var levelTarget = OnlineLevelTarget("Pickups", 3, "levels/waterslide.plhs");
+        var levelTarget = OnlineLevelTarget(TargetType.Pickups, "Pickups", 3, "levels/waterslide.plhs");
         levelTarget.Level.Online = false;
 
         var dto = _mapper.Map<LevelTargetDto>(levelTarget);

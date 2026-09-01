@@ -48,7 +48,7 @@ public class TournamentGroupProfile : Profile
 
     private static string GetOnlineTarget(LevelTarget levelTarget)
     {
-        if (levelTarget.Target.Type == "Fastest time")
+        if (levelTarget.TargetId == (long)TargetType.FastestTime)
         {
             return string.Empty;
         }
