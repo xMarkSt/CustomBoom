@@ -217,6 +217,88 @@ public class TournamentService : ITournamentService
         return BuildJoinResponse(tournament, player);
     }
 
+    /// <summary>
+    /// Post-tournament results: top 3 standings plus the player's own standing, per requested
+    /// tournament, keyed by the tournament's uuid. Also recomputes the player's aggregate
+    /// tournament stats (wins, tournaments played) across all tournaments they've competed in.
+    /// </summary>
+    public async Task<ResultsResponseDto> Results(ResultsTournamentDto dto, Player player)
+    {
+        var tournaments = await _repository.GetAll<Tournament>()
+            .Include(t => t.Standings)
+            .ThenInclude(s => s.Player)
+            .Include(t => t.TournamentGroup)
+            .Where(t => dto.TournamentUuids.Contains(t.Uuid))
+            .ToListAsync();
+
+        var response = new ResultsResponseDto();
+        foreach (var tournament in tournaments)
+        {
+            response[tournament.Uuid] = BuildResultsEntry(tournament, player);
+        }
+
+        await UpdatePlayerTournamentStats(player);
+
+        return response;
+    }
+
+    private TournamentResultsDto BuildResultsEntry(Tournament tournament, Player player)
+    {
+        var sorted = tournament.Standings.OrderBy(s => s.Time).ToList();
+        var selfStanding = sorted.FirstOrDefault(s => s.UserId == player.Id);
+        var rank = selfStanding != null ? sorted.IndexOf(selfStanding) + 1 : 0;
+
+        var podium = sorted.Take(3).ToList();
+        var standings = podium.Select((s, index) =>
+        {
+            var standingDto = _mapper.Map<StandingDto>(s);
+            standingDto.Rank = index + 1;
+            standingDto.IsSelf = s.UserId == player.Id;
+            return standingDto;
+        }).ToList();
+
+        // Player's own standing isn't in the podium: append it with their real (possibly >3) rank.
+        if (selfStanding != null && !podium.Contains(selfStanding))
+        {
+            var standingDto = _mapper.Map<StandingDto>(selfStanding);
+            standingDto.Rank = rank;
+            standingDto.IsSelf = true;
+            standings.Add(standingDto);
+        }
+
+        return new TournamentResultsDto
+        {
+            Completed = tournament.TournamentGroup.EndsAt <= DateTime.UtcNow ? 1 : 0,
+            Rank = rank,
+            Standings = standings
+        };
+    }
+
+    /// <summary>
+    /// Recompute the player's tournament stats across every tournament they've ever stood in:
+    /// how many they've played, and how many they won (their standing has the best time).
+    /// </summary>
+    private async Task UpdatePlayerTournamentStats(Player player)
+    {
+        var playerStandings = await _repository.GetAll<Standing>()
+            .Where(s => s.UserId == player.Id)
+            .ToListAsync();
+
+        var tournamentIds = playerStandings.Select(s => s.TournamentId).Distinct().ToList();
+        var bestTimes = (await _repository.GetAll<Standing>()
+                .Where(s => tournamentIds.Contains(s.TournamentId))
+                .GroupBy(s => s.TournamentId)
+                .Select(g => new { TournamentId = g.Key, BestTime = g.Min(s => s.Time) })
+                .ToListAsync())
+            .ToDictionary(x => x.TournamentId, x => x.BestTime);
+
+        player.WcPlayed = playerStandings.Count;
+        player.WcWon = playerStandings.Count(s => s.Time == bestTimes[s.TournamentId]);
+
+        _repository.Update(player);
+        await _repository.SaveAsync();
+    }
+
     public async Task<TournamentGroup> CreateGroup(TimeSpan duration, LevelTarget? levelTarget = null)
     {
         // Pick a random level target if none provided

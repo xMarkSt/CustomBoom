@@ -29,6 +29,11 @@ public class PlayerService : IPlayerService
         return player;
     }
 
+    public async Task<Player?> GetPlayer(Guid uuid)
+    {
+        return await _repository.GetAll<Player>().FirstOrDefaultAsync(p => p.Uuid == uuid);
+    }
+
     public async Task<Player> UpdatePlayer(IPlayerInfo playerInfo)
     {
         var player = await _repository.GetAll<Player>().FirstOrDefaultAsync(p => p.Uuid == playerInfo.UserUuid);
