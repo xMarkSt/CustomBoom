@@ -1,3 +1,4 @@
+using System.Text.Json;
 using AutoMapper;
 using Boom.Common.DTOs;
 using Boom.Common.DTOs.Response;
@@ -33,26 +34,46 @@ public class TournamentGroupProfile : Profile
                 opt => opt.MapFrom(src =>
                     // Use the level target id here to ensure an entry is created in the player's ZLEVEL database for each unique goal
                     src.Level.Online ? src.Id : src.Level.Version))
-            .ForMember(dest => dest.Target, 
+            .ForMember(dest => dest.Target,
                 opt => opt.MapFrom(src =>
-                    // todo: when online json encode! See php. Otherwise empty.
-                    src.Level.Online ? GetOnlineTarget() : string.Empty)) 
-            .ForMember(dest => dest.Online, 
+                    src.Level.Online ? GetOnlineTarget(src) : string.Empty))
+            .ForMember(dest => dest.Online,
                 opt => opt.MapFrom(src => src.Level.Online))
-            .ForMember(dest => dest.Url, 
-                opt => opt.MapFrom(src => src.Level.Online ? GetOnlineUrl() : string.Empty))
+            .ForMember(dest => dest.Url,
+                opt => opt.MapFrom(src => src.Level.Online ? GetOnlineUrl(src.Level) : string.Empty))
             // todo not working?
             .ForMember(dest => dest.BgName, 
                 opt => opt.MapFrom(src => src.Level.Background.BgName));
     }
 
-    private string GetOnlineTarget()
+    private static string GetOnlineTarget(LevelTarget levelTarget)
     {
-        throw new NotImplementedException();
+        if (levelTarget.Target.Type == "Fastest time")
+        {
+            return string.Empty;
+        }
+
+        var target = new Dictionary<string, object>
+        {
+            ["Type"] = levelTarget.Target.Type
+        };
+        if (levelTarget.TargetAmount != null)
+        {
+            target["Target"] = levelTarget.TargetAmount;
+        }
+
+        return JsonSerializer.Serialize(target);
     }
 
-    private string GetOnlineUrl()
+    private static string GetOnlineUrl(Level level)
     {
-        throw new NotImplementedException();
+        var baseUrl = Environment.GetEnvironmentVariable("APP_URL") ?? string.Empty;
+
+        if (!string.IsNullOrEmpty(level.FilePath))
+        {
+            return $"{baseUrl}/storage/{level.FilePath.TrimStart('/')}";
+        }
+
+        return $"{baseUrl}/online-levels/{level.LevelId}.plhs";
     }
 }
