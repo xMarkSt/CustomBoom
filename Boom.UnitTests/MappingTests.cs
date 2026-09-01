@@ -18,8 +18,29 @@ public class MappingTests
         _mapper = TestMapperFactory.Create(
             new PlayerProfile(),
             new StandingProfile(),
-            new TournamentProfile());
+            new TournamentProfile(),
+            new TournamentGroupProfile());
     }
+
+    private static LevelTarget OnlineLevelTarget(string targetType, int? targetAmount, string? filePath) =>
+        new()
+        {
+            Id = 3,
+            TargetAmount = targetAmount,
+            Order = 1,
+            Level = new Level
+            {
+                Id = 1,
+                DisplayName = "Waterslide",
+                LevelId = "Waterslide",
+                Online = true,
+                FilePath = filePath,
+                Version = 1,
+                Theme = new Theme { Id = 1, Name = "Frozen Hills" },
+                Background = new Theme { Id = 2, Name = "North", BgName = "NorthBG.plist" }
+            },
+            Target = new Target { Id = 1, Type = targetType }
+        };
 
     [Test]
     public void Test_GetScheduleDto_Player_Mapping()
@@ -202,6 +223,68 @@ public class MappingTests
         dto.Users.Should().Be(tournament.Standings.Count);
         dto.CreatedAt.Should().Be(tournament.CreatedAt!.Value.ToString("yyyy-MM-dd HH:mm:ss"));
         dto.UpdatedAt.Should().Be(tournament.UpdatedAt!.Value.ToString("yyyy-MM-dd HH:mm:ss"));
+    }
+
+    [Test]
+    public void Test_LevelTarget_LevelTargetDto_Mapping_OnlineFastestTime_TargetIsEmpty()
+    {
+        var levelTarget = OnlineLevelTarget("Fastest time", 10, "levels/waterslide.plhs");
+
+        var dto = _mapper.Map<LevelTargetDto>(levelTarget);
+
+        dto.Target.Should().Be(string.Empty);
+    }
+
+    [Test]
+    public void Test_LevelTarget_LevelTargetDto_Mapping_OnlineWithAmount_TargetIsJson()
+    {
+        var levelTarget = OnlineLevelTarget("Pickups", 3, "levels/waterslide.plhs");
+
+        var dto = _mapper.Map<LevelTargetDto>(levelTarget);
+
+        dto.Target.Should().Be("{\"Type\":\"Pickups\",\"Target\":3}");
+    }
+
+    [Test]
+    public void Test_LevelTarget_LevelTargetDto_Mapping_OnlineWithoutAmount_TargetOmitsAmountKey()
+    {
+        var levelTarget = OnlineLevelTarget("All bombs", null, "levels/waterslide.plhs");
+
+        var dto = _mapper.Map<LevelTargetDto>(levelTarget);
+
+        dto.Target.Should().Be("{\"Type\":\"All bombs\"}");
+    }
+
+    [Test]
+    public void Test_LevelTarget_LevelTargetDto_Mapping_OnlineWithFilePath_UrlUsesStoragePath()
+    {
+        var levelTarget = OnlineLevelTarget("Pickups", 3, "levels/waterslide.plhs");
+
+        var dto = _mapper.Map<LevelTargetDto>(levelTarget);
+
+        dto.Url.Should().EndWith("/storage/levels/waterslide.plhs");
+    }
+
+    [Test]
+    public void Test_LevelTarget_LevelTargetDto_Mapping_OnlineWithoutFilePath_UrlUsesFallbackPath()
+    {
+        var levelTarget = OnlineLevelTarget("Pickups", 3, null);
+
+        var dto = _mapper.Map<LevelTargetDto>(levelTarget);
+
+        dto.Url.Should().EndWith("/online-levels/Waterslide.plhs");
+    }
+
+    [Test]
+    public void Test_LevelTarget_LevelTargetDto_Mapping_Offline_TargetAndUrlAreEmpty()
+    {
+        var levelTarget = OnlineLevelTarget("Pickups", 3, "levels/waterslide.plhs");
+        levelTarget.Level.Online = false;
+
+        var dto = _mapper.Map<LevelTargetDto>(levelTarget);
+
+        dto.Target.Should().Be(string.Empty);
+        dto.Url.Should().Be(string.Empty);
     }
 
     [Test]
