@@ -22,6 +22,7 @@ builder.Services.AddDbContext<BoomDbContext>(options =>
 builder.Services.AddScoped(typeof(IRepository), typeof(Repository<BoomDbContext>));
 builder.Services.AddScoped<ITournamentService, TournamentService>();
 builder.Services.AddScoped<IPlayerService, PlayerService>();
+builder.Services.AddScoped<IArticleService, ArticleService>();
 builder.Services.AddSingleton<IPlistSerializationService, PlistSerializationService>();
 builder.Services.AddSingleton<IEncryptionService, EncryptionService>();
 builder.Services.AddScoped<EncryptResponseFilter>();
