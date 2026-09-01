@@ -2,6 +2,7 @@ using AutoMapper;
 using Boom.Business.MappingProfiles;
 using Boom.Common.DTOs.Request;
 using Boom.Common.DTOs.Response;
+using Boom.Common.Enums;
 using Boom.Infrastructure.Data.Entities;
 using FluentAssertions;
 

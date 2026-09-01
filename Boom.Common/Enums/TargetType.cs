@@ -1,4 +1,4 @@
-namespace Boom.Infrastructure.Data.Entities;
+namespace Boom.Common.Enums;
 
 // Mirrors the stable, seeded ids in the `targets` table (see Scripts/targets.sql).
 // Target.Type is display text and can be renamed/localized independently of these ids.
