@@ -134,6 +134,31 @@ public class TournamentServiceResultsTests
     }
 
     [Test]
+    public async Task Results_TiedFastestTime_OnlyEarliestSubmittedStandingCountsAsWon()
+    {
+        // Players 99 and 50 have the exact same (fastest) time. Only whoever submitted first
+        // (the lower Standing id) should be credited with the win, matching PHP's rank accessor.
+        var tournamentUuid = Guid.NewGuid();
+        var firstSubmitted = Standing(id: 1, userId: 99, time: 1000);
+        var secondSubmitted = Standing(id: 2, userId: 50, time: 1000);
+        var tournament = Tournament(tournamentUuid, endsAt: DateTime.UtcNow.AddHours(1),
+            firstSubmitted, secondSubmitted);
+        SetupTournaments(tournament);
+        SetupStandings(tournament.Standings.ToArray());
+
+        var player99 = Player(99);
+        var result = await _service.Results(Dto(tournamentUuid), player99);
+
+        result[tournamentUuid].Rank.Should().Be(1);
+        player99.WcWon.Should().Be(1);
+
+        // Re-run for the second-place-on-tiebreak player: they must NOT be credited with a win.
+        var player50 = Player(50);
+        await _service.Results(Dto(tournamentUuid), player50);
+        player50.WcWon.Should().Be(0);
+    }
+
+    [Test]
     public async Task Results_PlayerHasNoStandingInTournament_ReturnsOnlyPodium()
     {
         var tournamentUuid = Guid.NewGuid();
@@ -191,7 +216,7 @@ public class TournamentServiceResultsTests
         Player = new Player { Id = userId, Uuid = Guid.NewGuid(), Nickname = $"P{userId}" }
     };
 
-    private static ResultsTournamentDto Dto(params Guid[] tournamentUuids) => new()
+    private static GetTournamentResultsDto Dto(params Guid[] tournamentUuids) => new()
     {
         UserUuid = Guid.NewGuid(),
         TournamentUuids = tournamentUuids.ToList()

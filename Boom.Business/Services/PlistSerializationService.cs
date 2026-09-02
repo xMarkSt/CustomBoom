@@ -23,19 +23,17 @@ public class PlistSerializationService : IPlistSerializationService
     public NSDictionary SerializeToNSDictionary(IPlistSerializable dto)
     {
         // Some responses (e.g. tournament results) have no fixed set of properties: the plist
-        // root is a dictionary keyed by a runtime value (a tournament uuid). Those are modeled
-        // as an IDictionary rather than reflected-over properties.
-        if (dto is IDictionary dtoDictionary)
+        // root is a dictionary keyed by a runtime value (a tournament uuid) rather than named
+        // fields.
+        if (dto is IPlistKeyedCollection keyedCollection)
         {
             var dynamicDict = new Dictionary<string, object>();
-            foreach (DictionaryEntry entry in dtoDictionary)
+            foreach (var (key, value) in keyedCollection.Entries)
             {
-                var value = ConvertToPlistCompatibleType(entry.Value);
-                if (value != null)
-                    dynamicDict[entry.Key.ToString()!] = value;
+                dynamicDict[key] = SerializeToNSDictionary(value);
             }
 
-            return (NSDictionary)NSObject.Wrap(dynamicDict);
+            return NSObject.Wrap(dynamicDict);
         }
 
         var dict = new Dictionary<string, object>();

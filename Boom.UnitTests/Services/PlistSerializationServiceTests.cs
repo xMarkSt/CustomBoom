@@ -43,9 +43,9 @@ public class PlistSerializationServiceTests
     {
         var service = new PlistSerializationService();
         var tournamentUuid = Guid.NewGuid();
-        var dto = new ResultsResponseDto
+        var dto = new TournamentResultsDto
         {
-            [tournamentUuid] = new TournamentResultsDto
+            [tournamentUuid] = new TournamentResultDto
             {
                 Completed = 1,
                 Rank = 2,

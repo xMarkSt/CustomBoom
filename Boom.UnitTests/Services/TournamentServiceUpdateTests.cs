@@ -194,6 +194,26 @@ public class TournamentServiceUpdateTests
         _mockRepository.Verify(r => r.SaveAsync(), Times.Once);
     }
 
+    [Test]
+    public async Task Update_TiedFastestTime_EarliestSubmittedStandingRanksFirst()
+    {
+        // Two standings tie for the fastest time. Whoever submitted first (lower id) must rank
+        // above the other, matching PHP's Standing::rank accessor (ordered by time, ties broken
+        // by row order).
+        var uuid = Guid.NewGuid();
+        var earlier = Standing(id: 1, userId: 50, time: 1000, ghostId: 10);
+        var later = Standing(id: 2, userId: 51, time: 1000, ghostId: 11);
+        var self = Standing(id: 3, userId: 99, time: 3000, ghostId: 20);
+        SetupTournament(Tournament(uuid, earlier, later, self));
+
+        // Equal time leaves self's own standing untouched; this only exercises the ranking display.
+        var result = await _service.Update(Dto(uuid, time: 3000), Player(99));
+
+        result.Should().NotBeNull();
+        result!.Standings.Should().ContainSingle(s => s.Id == (int)earlier.Id && s.Rank == 1);
+        result.Standings.Should().ContainSingle(s => s.Id == (int)later.Id && s.Rank == 2);
+    }
+
     // --- Helpers ---
 
     private void SetupTournament(Tournament tournament) =>
