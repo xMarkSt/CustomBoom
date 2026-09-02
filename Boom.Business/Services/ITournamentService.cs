@@ -12,5 +12,6 @@ public interface ITournamentService
     Task<Boom.Common.DTOs.Response.JoinTournamentDto?> Reload(ReloadTournamentDto dto, Player player);
     Task<Boom.Common.DTOs.Response.JoinTournamentDto?> Update(UpdateTournamentDto dto, Player player);
     Task<byte[]?> GetGhost(GhostTournamentDto dto);
+    Task<TournamentResultsDto> Results(GetTournamentResultsDto dto, Player player);
     Task<TournamentGroup> CreateGroup(TimeSpan duration, LevelTarget? levelTarget = null);
 }

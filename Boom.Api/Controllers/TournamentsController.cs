@@ -95,6 +95,18 @@ public class TournamentsController : ControllerBase
     }
 
     [HttpPost]
+    [EncryptResponse]
+    public async Task<ActionResult<string>> Results([FromForm] GetTournamentResultsDto dto)
+    {
+        // Unlike the other actions, results() doesn't upsert player profile info — it only reads.
+        var player = await _playerService.GetPlayer(dto.UserUuid);
+        if (player == null) return NotFound();
+
+        var result = await _tournamentService.Results(dto, player);
+        return Ok(result);
+    }
+
+    [HttpPost]
     public async Task<ActionResult<TournamentGroup>> Create(
         [FromQuery] int? durationHours,
         [FromQuery] int? durationMinutes)

@@ -37,4 +37,33 @@ public class PlistSerializationServiceTests
 
         plist.ToXmlPropertyList().Should().Contain("_sk");
     }
+
+    [Test]
+    public void SerializeToNSDictionary_ResultsResponse_KeysRootByTournamentUuid()
+    {
+        var service = new PlistSerializationService();
+        var tournamentUuid = Guid.NewGuid();
+        var dto = new TournamentResultsDto
+        {
+            [tournamentUuid] = new TournamentResultDto
+            {
+                Completed = 1,
+                Rank = 2,
+                Standings = [new StandingDto
+                {
+                    HeroStyle = "h", WheelStyle = "w", EngineStyle = "e",
+                    CreatedAt = "", UpdatedAt = "",
+                    BoomUser = new PlayerDto(),
+                    Rank = 1
+                }]
+            }
+        };
+
+        var xml = service.SerializeToNSDictionary(dto).ToXmlPropertyList();
+
+        xml.Should().Contain($"<key>{tournamentUuid}</key>");
+        xml.Should().Contain("<key>completed</key>");
+        xml.Should().Contain("<key>rank</key>");
+        xml.Should().Contain("<key>standings</key>");
+    }
 }

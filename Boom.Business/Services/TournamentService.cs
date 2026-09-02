@@ -217,6 +217,99 @@ public class TournamentService : ITournamentService
         return BuildJoinResponse(tournament, player);
     }
 
+    /// <summary>
+    /// Post-tournament results: top 3 standings plus the player's own standing, per requested
+    /// tournament, keyed by the tournament's uuid. Also recomputes the player's aggregate
+    /// tournament stats (wins, tournaments played) across all tournaments they've competed in.
+    /// </summary>
+    public async Task<TournamentResultsDto> Results(GetTournamentResultsDto dto, Player player)
+    {
+        var tournaments = await _repository.GetAll<Tournament>()
+            .Include(t => t.Standings)
+            .ThenInclude(s => s.Player)
+            .Include(t => t.TournamentGroup)
+            .Where(t => dto.TournamentUuids.Contains(t.Uuid))
+            .ToListAsync();
+
+        var response = new TournamentResultsDto();
+        foreach (var tournament in tournaments)
+        {
+            response[tournament.Uuid] = BuildResultsEntry(tournament, player);
+        }
+
+        await UpdatePlayerTournamentStats(player);
+
+        return response;
+    }
+
+    private TournamentResultDto BuildResultsEntry(Tournament tournament, Player player)
+    {
+        var sorted = RankStandings(tournament.Standings).ToList();
+        var selfStanding = sorted.FirstOrDefault(s => s.UserId == player.Id);
+        var rank = selfStanding != null ? sorted.IndexOf(selfStanding) + 1 : 0;
+
+        var podium = sorted.Take(3).ToList();
+        var standings = podium.Select((s, index) =>
+        {
+            var standingDto = _mapper.Map<StandingDto>(s);
+            standingDto.Rank = index + 1;
+            standingDto.IsSelf = s.UserId == player.Id;
+            return standingDto;
+        }).ToList();
+
+        // Player's own standing isn't in the podium: append it with their real (possibly >3) rank.
+        if (selfStanding != null && !podium.Contains(selfStanding))
+        {
+            var standingDto = _mapper.Map<StandingDto>(selfStanding);
+            standingDto.Rank = rank;
+            standingDto.IsSelf = true;
+            standings.Add(standingDto);
+        }
+
+        return new TournamentResultDto
+        {
+            Completed = tournament.TournamentGroup.EndsAt <= DateTime.UtcNow ? 1 : 0,
+            Rank = rank,
+            Standings = standings
+        };
+    }
+
+    /// <summary>
+    /// Order standings within a single tournament by rank: fastest time first, ties broken by
+    /// whoever submitted first (lower id). Exact time ties aren't rare on some levels, so a
+    /// plain "time equals the best time" check would credit every tied player as rank 1 —
+    /// this mirrors PHP's Standing::rank accessor (ordered by time, ties broken by row order),
+    /// which only ever awards rank 1 to a single standing.
+    /// </summary>
+    private static IEnumerable<Standing> RankStandings(IEnumerable<Standing> standings) =>
+        standings.OrderBy(s => s.Time).ThenBy(s => s.Id);
+
+    /// <summary>
+    /// Recompute the player's tournament stats across every tournament they've ever stood in:
+    /// how many they've played, and how many they won (their standing is rank 1 in that
+    /// tournament).
+    /// </summary>
+    private async Task UpdatePlayerTournamentStats(Player player)
+    {
+        var playerStandings = await _repository.GetAll<Standing>()
+            .Where(s => s.UserId == player.Id)
+            .ToListAsync();
+
+        var tournamentIds = playerStandings.Select(s => s.TournamentId).Distinct().ToList();
+        var winningStandingIds = (await _repository.GetAll<Standing>()
+                .Where(s => tournamentIds.Contains(s.TournamentId))
+                .ToListAsync())
+            .GroupBy(s => s.TournamentId)
+            .Select(g => RankStandings(g).First().Id)
+            .ToHashSet();
+
+        player.WcPlayed = playerStandings.Count;
+        player.WcWon = playerStandings.Count(s => winningStandingIds.Contains(s.Id));
+
+        _repository.Update(player);
+        await _repository.SaveAsync();
+    }
+
     public async Task<TournamentGroup> CreateGroup(TimeSpan duration, LevelTarget? levelTarget = null)
     {
         // Pick a random level target if none provided
@@ -272,8 +365,7 @@ public class TournamentService : ITournamentService
 
     private JoinTournamentResponseDto BuildJoinResponse(Tournament tournament, Player player)
     {
-        var sortedDtos = tournament.Standings
-            .OrderBy(s => s.Time)
+        var sortedDtos = RankStandings(tournament.Standings)
             .Select((s, index) =>
             {
                 var dto = _mapper.Map<StandingDto>(s);
