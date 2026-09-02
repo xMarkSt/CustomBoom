@@ -58,7 +58,7 @@ namespace Boom.UnitTests.Services
             };
             SetupStandings(new[] { standing });
 
-            var dto = new GhostTournamentDto { TournamentUuid = tournamentUuid, OpponentUuid = opponentUuid };
+            var dto = new GetTournamentGhostDto { TournamentUuid = tournamentUuid, OpponentUuid = opponentUuid };
 
             // Act
             var result = await _tournamentService.GetGhost(dto);
@@ -83,7 +83,7 @@ namespace Boom.UnitTests.Services
             };
             SetupStandings(new[] { standing });
 
-            var dto = new GhostTournamentDto { TournamentUuid = tournamentUuid, OpponentUuid = opponentUuid };
+            var dto = new GetTournamentGhostDto { TournamentUuid = tournamentUuid, OpponentUuid = opponentUuid };
 
             // Act
             var result = await _tournamentService.GetGhost(dto);
@@ -104,7 +104,7 @@ namespace Boom.UnitTests.Services
             };
             SetupStandings(new[] { standing });
 
-            var dto = new GhostTournamentDto { TournamentUuid = Guid.NewGuid(), OpponentUuid = Guid.NewGuid() };
+            var dto = new GetTournamentGhostDto { TournamentUuid = Guid.NewGuid(), OpponentUuid = Guid.NewGuid() };
 
             // Act
             var result = await _tournamentService.GetGhost(dto);
@@ -126,7 +126,7 @@ namespace Boom.UnitTests.Services
             };
             SetupStandings(new[] { standing });
 
-            var dto = new GhostTournamentDto { TournamentUuid = tournamentUuid, OpponentUuid = Guid.NewGuid() };
+            var dto = new GetTournamentGhostDto { TournamentUuid = tournamentUuid, OpponentUuid = Guid.NewGuid() };
 
             // Act
             var result = await _tournamentService.GetGhost(dto);

@@ -1,12 +1,12 @@
 using AutoMapper;
 using Boom.Business.Services;
+using Boom.Common.DTOs.Request;
 using Boom.Common.DTOs.Response;
 using Boom.Infrastructure.Data;
 using Boom.Infrastructure.Data.Entities;
 using FluentAssertions;
 using MockQueryable;
 using Moq;
-using JoinTournamentDto = Boom.Common.DTOs.Request.JoinTournamentDto;
 using static Boom.UnitTests.Services.TournamentTestFixtures;
 
 namespace Boom.UnitTests.Services;

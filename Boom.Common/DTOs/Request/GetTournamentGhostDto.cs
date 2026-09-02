@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Boom.Common.DTOs.Request
 {
-    public class GhostTournamentDto
+    public class GetTournamentGhostDto
     {
         [FromForm(Name = "tournament_uuid")]
         public Guid TournamentUuid { get; set; }

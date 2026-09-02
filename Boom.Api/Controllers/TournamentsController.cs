@@ -74,7 +74,7 @@ public class TournamentsController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Ghost([FromForm] GhostTournamentDto dto)
+    public async Task<IActionResult> Ghost([FromForm] GetTournamentGhostDto dto)
     {
         // No [EncryptResponse]: the ghost replay is returned as raw binary, not an encrypted plist.
         var ghostData = await _tournamentService.GetGhost(dto);

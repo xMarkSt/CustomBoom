@@ -2,9 +2,6 @@ using AutoMapper;
 using Boom.Common.DTOs.Request;
 using Boom.Common.DTOs.Response;
 using Boom.Infrastructure.Data.Entities;
-using JoinTournamentRequestDto = Boom.Common.DTOs.Request.JoinTournamentDto;
-using ReloadTournamentRequestDto = Boom.Common.DTOs.Request.ReloadTournamentDto;
-using UpdateTournamentRequestDto = Boom.Common.DTOs.Request.UpdateTournamentDto;
 
 namespace Boom.Business.MappingProfiles;
 
@@ -31,7 +28,7 @@ public class PlayerProfile : Profile
             .ForMember(dest => dest.MaxGroupIdUnlocked,
                 opt => { opt.Condition(src => src.MaxGroupIdUnlocked != null); opt.MapFrom(src => src.MaxGroupIdUnlocked!); });
 
-        CreateMap<JoinTournamentRequestDto, Player>()
+        CreateMap<JoinTournamentDto, Player>()
             .ForMember(dest => dest.Id, opt => opt.Ignore())
             .ForMember(dest => dest.Uuid, opt => opt.Ignore())
             .ForMember(dest => dest.SecretKey, opt => opt.Ignore())
@@ -57,7 +54,7 @@ public class PlayerProfile : Profile
                 opt => { opt.Condition(src => src.TotalEarnedSuperstars != null); opt.MapFrom(src => src.TotalEarnedSuperstars!.Value); })
             ;
 
-        CreateMap<ReloadTournamentRequestDto, Player>()
+        CreateMap<ReloadTournamentDto, Player>()
             .ForMember(dest => dest.Id, opt => opt.Ignore())
             .ForMember(dest => dest.Uuid, opt => opt.Ignore())
             .ForMember(dest => dest.SecretKey, opt => opt.Ignore())
@@ -89,7 +86,7 @@ public class PlayerProfile : Profile
                 opt => { opt.Condition(src => src.TotalEarnedSuperstars != null); opt.MapFrom(src => src.TotalEarnedSuperstars!.Value); })
             ;
 
-        CreateMap<UpdateTournamentRequestDto, Player>()
+        CreateMap<UpdateTournamentDto, Player>()
             .ForMember(dest => dest.Id, opt => opt.Ignore())
             .ForMember(dest => dest.Uuid, opt => opt.Ignore())
             .ForMember(dest => dest.SecretKey, opt => opt.Ignore())

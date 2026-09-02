@@ -1,6 +1,6 @@
 namespace Boom.Common.DTOs.Response;
 
-public class JoinTournamentDto : IPlistSerializable
+public class TournamentStandingsDto : IPlistSerializable
 {
     public TournamentDto Tournament { get; set; }
     public int Rank { get; set; }

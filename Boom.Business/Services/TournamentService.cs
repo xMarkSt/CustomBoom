@@ -6,8 +6,6 @@ using Boom.Common.Extensions;
 using Boom.Infrastructure.Data;
 using Boom.Infrastructure.Data.Entities;
 using Microsoft.EntityFrameworkCore;
-using JoinTournamentDto = Boom.Common.DTOs.Request.JoinTournamentDto;
-using JoinTournamentResponseDto = Boom.Common.DTOs.Response.JoinTournamentDto;
 
 namespace Boom.Business.Services;
 
@@ -49,7 +47,7 @@ public class TournamentService : ITournamentService
     /// <param name="dto"></param>
     /// <param name="player"></param>
     /// <returns>The tournament result with standings and player rank. Null if group not found or ended.</returns>
-    public async Task<JoinTournamentResponseDto?> Join(JoinTournamentDto dto, Player player)
+    public async Task<TournamentStandingsDto?> Join(JoinTournamentDto dto, Player player)
     {
         // Get the tournament group by uuid
         var tournamentGroup = await _repository.GetAll<TournamentGroup>()
@@ -110,7 +108,7 @@ public class TournamentService : ITournamentService
         return BuildJoinResponse(tournament, player);
     }
     
-    public async Task<JoinTournamentResponseDto?> Reload(ReloadTournamentDto dto, Player player)
+    public async Task<TournamentStandingsDto?> Reload(ReloadTournamentDto dto, Player player)
     {
         var tournament = await _repository.GetAll<Tournament>()
             .Include(t => t.Standings)
@@ -132,7 +130,7 @@ public class TournamentService : ITournamentService
     /// decompressed replay back, matching the original PHP Ghost::getDataAttribute accessor),
     /// or null if the tournament, the opponent's standing, or its ghost is not found.
     /// </returns>
-    public async Task<byte[]?> GetGhost(GhostTournamentDto dto)
+    public async Task<byte[]?> GetGhost(GetTournamentGhostDto dto)
     {
         var standing = await _repository.GetAll<Standing>()
             .Include(s => s.Ghost)
@@ -171,7 +169,7 @@ public class TournamentService : ITournamentService
     /// tournament.
     /// </summary>
     /// <returns>The tournament result with standings and player rank. Null if tournament or standing not found.</returns>
-    public async Task<JoinTournamentResponseDto?> Update(UpdateTournamentDto dto, Player player)
+    public async Task<TournamentStandingsDto?> Update(UpdateTournamentDto dto, Player player)
     {
         var tournament = await _repository.GetAll<Tournament>()
             .Include(t => t.Standings)
@@ -363,7 +361,7 @@ public class TournamentService : ITournamentService
         standing.EngineStyle = dto.EngineStyle;
     }
 
-    private JoinTournamentResponseDto BuildJoinResponse(Tournament tournament, Player player)
+    private TournamentStandingsDto BuildJoinResponse(Tournament tournament, Player player)
     {
         var sortedDtos = RankStandings(tournament.Standings)
             .Select((s, index) =>
@@ -377,7 +375,7 @@ public class TournamentService : ITournamentService
 
         var standings = sortedDtos.ToList();
         if (sortedDtos.Count <= 0)
-            return new JoinTournamentResponseDto
+            return new TournamentStandingsDto
             {
                 Tournament = _mapper.Map<TournamentDto>(tournament),
                 Standings = standings,
@@ -402,7 +400,7 @@ public class TournamentService : ITournamentService
             Rank = 0
         });
 
-        return new JoinTournamentResponseDto
+        return new TournamentStandingsDto
         {
             Tournament = _mapper.Map<TournamentDto>(tournament),
             Standings = standings,
