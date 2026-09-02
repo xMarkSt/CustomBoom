@@ -66,4 +66,51 @@ public class PlistSerializationServiceTests
         xml.Should().Contain("<key>rank</key>");
         xml.Should().Contain("<key>standings</key>");
     }
+    
+    [Test]
+    public void SerializeToNSDictionary_ArticlesAsEmptyList_SerializesToEmptyArray()
+    {
+        var service = new PlistSerializationService();
+        var dto = new NewsFeedDto { Articles = new List<ArticleDto>(), Count = 0, New = 0 };
+
+        var plist = (NSDictionary)service.SerializeToNSDictionary(dto);
+
+        plist["articles"].Should().BeOfType<NSArray>();
+        ((NSArray)plist["articles"]).Count.Should().Be(0);
+    }
+
+    [Test]
+    public void SerializeToNSDictionary_ArticlesAsDictionary_SerializesToDictionaryKeyedByGivenKeys()
+    {
+        var service = new PlistSerializationService();
+        var dto = new NewsFeedDto
+        {
+            Articles = new Dictionary<string, ArticleDto>
+            {
+                ["1700000000.5"] = new ArticleDto
+                {
+                    Id = 5,
+                    Timestamp = 1700000000,
+                    Title = "Title",
+                    Message = "Message",
+                    Link = "https://example.com",
+                    LinkTitle = "Read more",
+                    Popup = 1,
+                },
+            },
+            Count = 1,
+            New = 1,
+        };
+
+        var plist = (NSDictionary)service.SerializeToNSDictionary(dto);
+
+        var articles = (NSDictionary)plist["articles"];
+        articles.ContainsKey("1700000000.5").Should().BeTrue();
+
+        var xml = plist.ToXmlPropertyList();
+        xml.Should().Contain("1700000000.5");
+        xml.Should().Contain("<key>title</key>").And.Contain("Title");
+        xml.Should().Contain("<key>link_title</key>").And.Contain("Read more");
+        xml.Should().Contain("<key>popup</key>");
+    }
 }

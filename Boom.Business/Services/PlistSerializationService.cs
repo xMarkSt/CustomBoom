@@ -72,13 +72,25 @@ public class PlistSerializationService : IPlistSerializationService
             case Guid guid:
                 return guid.ToString();
             case IList list:
-                // Convert list type to NSArray. 
+                // Convert list type to NSArray.
                 var newList = new NSArray();
                 foreach (var listItem in list)
                 {
                     newList.Add(ConvertToPlistCompatibleType(listItem));
                 }
                 return newList;
+            case IDictionary dictionary:
+                // Convert dictionary type to NSDictionary, keyed by the dictionary's own keys.
+                var newDict = new Dictionary<string, object>();
+                foreach (DictionaryEntry entry in dictionary)
+                {
+                    var objToAdd = ConvertToPlistCompatibleType(entry.Value);
+                    if (objToAdd != null)
+                    {
+                        newDict.Add(entry.Key.ToString()!, objToAdd);
+                    }
+                }
+                return NSObject.Wrap(newDict);
             default:
                 // Return type as-is so it can be handled by plist-cil.
                 return obj;
